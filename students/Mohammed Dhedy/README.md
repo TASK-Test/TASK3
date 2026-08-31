@@ -9,3 +9,11 @@ my long goal is to become an experinced full stack developer ,and at the right t
 - gain experince from experted ASAL Engineers 
 - learn new technologies
 
+## machine setup
+
+- OS: Windows 11
+- JDK: 21
+- Node: v24.14.0 (LTS)
+- IDE: IntelliJ IDEA Community + VS Code
+- Docker Desktop: installed
+- GitHub CLI (gh): installed, authenticated
