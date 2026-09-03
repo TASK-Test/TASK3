@@ -12,5 +12,11 @@ INSERT INTO tasks (status_id, created_by, priority, target_date, title, descript
 (2, 2, 'MEDIUM', '2026-09-07', 'work on project', 'work in my personal project and complete issues', NOW(), NOW()),
 (3, 1, 'LOW', '2026-09-10', 'meeting with group', 'meet with group and exchange updates and advices', NOW(), NOW());
 
+SELECT t.id, t.title, t.priority,t.target_date, s.name, u.display_name
+FROM tasks t JOIN statuses s ON t.status_id=s.id
+JOIN users u ON t.created_by=u.id;
+
+
+SELECT s.name ,COUNT(t.id) FROM statuses s LEFT JOIN tasks t ON s.id=t.status_id GROUP BY s.name;
 
 
