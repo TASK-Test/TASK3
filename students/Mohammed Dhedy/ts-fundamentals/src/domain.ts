@@ -1,7 +1,7 @@
-type Priority = "LOW"|"MEDIUM"|"HIGH";
-type Role = "USER"|"ADMIN";
+export type Priority = "LOW"|"MEDIUM"|"HIGH";
+export type Role = "USER"|"ADMIN";
 
-interface User{
+export interface User{
     id:number;
     username:string;
     email:string;
@@ -9,13 +9,13 @@ interface User{
     role?:Role;
     createdAt:string;
 }
-interface Status{
+export interface Status{
     id:number;
     name:string;
     position:number;
     color?:string;
 }
-interface Task{
+export interface Task{
     id:number;
     title:string;
     description?:string;
