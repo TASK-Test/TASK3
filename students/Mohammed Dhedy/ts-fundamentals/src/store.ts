@@ -1,4 +1,4 @@
-class InMemoryStore<T extends { id: number }> {
+export class InMemoryStore<T extends { id: number }> {
   private items: T[] = [];
   public add(item: T): void {
     this.items.push(item);
