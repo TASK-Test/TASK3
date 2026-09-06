@@ -26,3 +26,11 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
 }
+type TaskSummary = Pick<Task, "id" | "title" | "priority">
+export function toSummary(t: Task): TaskSummary {
+  return {
+    id: t.id,
+    title: t.title,
+    priority: t.priority
+  };
+}
