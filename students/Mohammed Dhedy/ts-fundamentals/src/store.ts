@@ -13,6 +13,10 @@ class InMemoryStore<T extends { id: number }> {
   }
   public remove(id: number): void {
     let itemIndex = this.items.findIndex((i) => i.id === id);
-    if (itemIndex != -1) this.items.splice(itemIndex, 1);
+    if (itemIndex !== -1) this.items.splice(itemIndex, 1);
   }
+}
+
+export function byField<T, K extends keyof T>(items: T[], key: K, value: T[K]) {
+  return items.filter((i) => i[key] === value);
 }
