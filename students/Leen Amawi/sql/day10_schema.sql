@@ -17,7 +17,7 @@ CREATE TABLE statuses (id BIGSERIAL PRIMARY KEY,
 
 --create tasks table
 CREATE TABLE tasks (id BIGSERIAL PRIMARY KEY,
-    status_id BIGINT REFERENCES statuses(id),
+    status_id BIGINT REFERENCES statuses(id) ON DELETE RESTRICT,
     created_by BIGINT REFERENCES users(id),
     priority VARCHAR(10) CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH')),
     target_date DATE,
