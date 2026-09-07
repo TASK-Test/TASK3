@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "start": "tsx src/basics.ts"
+    "start": "tsx src/main.ts"
   },
   "keywords": [],
   "author": "",
