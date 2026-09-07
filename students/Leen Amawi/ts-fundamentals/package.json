@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "start-main": "tsx src/main.ts"
-    "start": "tsx src/basics.ts"
-
+     "start": "tsx src/basics.ts"
+"start-main": "tsx src/main.ts"
   },
   "keywords": [],
   "author": "",
