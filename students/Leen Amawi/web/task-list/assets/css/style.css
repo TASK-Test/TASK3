@@ -11,8 +11,9 @@ header {
   h1{
    color: #333; 
   }
-  nav {
+  nav ul{
   display: flex;
+  gap: 15px;
 }
 li{
   list-style: none;
