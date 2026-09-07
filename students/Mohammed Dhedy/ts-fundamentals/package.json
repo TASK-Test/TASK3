@@ -6,12 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "typecheck": "tsc --noEmit",
-    "start": "tsx src/basics.ts"
+    "start": "tsx src/basics.ts",
+    "start:main": "tsx src/main.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
