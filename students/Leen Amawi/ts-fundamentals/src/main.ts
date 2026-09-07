@@ -55,34 +55,3 @@ const highPriorityTasks = byField( taskStore.getAll(),"priority","HIGH");
 
 console.log("High priority tasks:");
 console.log(highPriorityTasks);
-
-async function main(): Promise<void> {
-  const tasks = await fetchTasks();
-
-  console.log("Task titles:");
-
-  tasks.forEach((task) => {
-  console.log(task.title);});
-
-  try {
-  await fetchTaskById(999);
-} catch (error) {
-  if (error instanceof Error) {
-    console.log(error.message);
-  }
-}
-function serialize(task: Task): string {
-  return  JSON.stringify(task);
-}
-
-const firstTask = tasks[0];
-if (firstTask) {
-  const json = serialize(firstTask);
-  console.log("Serialized task:");
-  console.log(json);
-  const parsed: Task = JSON.parse(json);
-  console.log("Round-trip title:", parsed.title);
-}
-}
-main();
-
