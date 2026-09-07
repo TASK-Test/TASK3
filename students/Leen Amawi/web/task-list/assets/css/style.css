@@ -1,0 +1,86 @@
+body {
+  font-family: Arial, sans-serif;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 30px;
+  background-color: #f5f5f5;
+  h1{
+   color: #333; 
+  }
+  nav ul{
+  display: flex;
+  gap: 15px;
+}
+li{
+  list-style: none;
+  a{
+    text-decoration: none;
+    color: #534b4b; 
+  }
+  }
+}
+table{
+      width:100%;
+      border-collapse: collapse;
+      border: 2px solid #000000;
+    
+      th,td{
+  padding: 30px 30px;
+background-color: rgb(206, 181, 181);
+Text-align: center;
+border-bottom: 1px solid #ddd;
+border-right: 1px solid #ddd;
+}
+
+tbody tr:hover td{
+  background-color: #f5f5f5;
+}
+}
+
+.backlog{
+    background-color: #aaa0a0;
+    padding: 10px 20px;
+    border-radius: 100px;
+    color: white;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+}
+.in-progress{
+    background-color: #5b8f5d;
+    padding: 10px 20px;
+    border-radius: 100px;
+    color: white;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+}
+.PriorityLow{
+  background-color: #8cc8cc;
+    padding: 10px 20px;
+    border-radius: 100px;
+    color: white;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;  
+}
+.PriorityHigh{
+  background-color: #a33232;
+    padding: 10px 20px;
+    border-radius: 100px;
+    color: white;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;  
+}
+
+
+
