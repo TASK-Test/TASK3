@@ -1,4 +1,5 @@
--- create TABLE
+DROP TABLE IF EXISTS task_scratch;
+--create TABLE
 CREATE TABLE task_scratch (id bigserial primary key, title varchar(200) not null, priority varchar(10), target_date date, done boolean default false);
 
 -- insert 5 rows 
