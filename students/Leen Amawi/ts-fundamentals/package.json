@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "start": "tsx src/main.ts"
     "start": "tsx src/basics.ts"
   },
   "keywords": [],
