@@ -1,5 +1,6 @@
 import type { User, Task, Status } from "./domain";
 import { InMemoryStore, byField } from "./store";
+import { fetchTasks, fetchTaskById } from "./api";
 
 const repository: InMemoryStore<Task> = new InMemoryStore<Task>();
 
@@ -71,3 +72,30 @@ repository.add(task3);
 const highTasks: Task[] = byField(repository.getAll(), "priority", "HIGH");
 
 console.log(highTasks);
+
+// ==================================DAY 13========================
+const fetchedTasks: Task[] = await fetchTasks();
+
+console.log("-----tasks titles : ");
+fetchedTasks.forEach((t) => console.log(t.title));
+
+console.log("----------fetch missing task---------------");
+try {
+  const missingTask = await fetchTaskById(999);
+  console.log(missingTask);
+} catch (error) {
+  console.log("Error:", (error as Error).message);
+}
+
+function serialize(task: Task): string {
+  return JSON.stringify(task);
+}
+
+let tempTask:Task|undefined=fetchedTasks.at(0);
+if(tempTask){
+let stringFiedTask:string=serialize(tempTask);
+console.log("stringify task : \n" + stringFiedTask);
+
+let parsedTask:Task=JSON.parse(stringFiedTask);
+console.log("parsed task : \n" + parsedTask.title);
+}
