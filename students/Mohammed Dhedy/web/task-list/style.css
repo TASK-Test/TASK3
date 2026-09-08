@@ -11,6 +11,7 @@
   padding: 10px 15px;
   margin: 0 auto;
   width: 100%;
+  max-width: 100%;
 }
 @media (min-width: 768px) {
   .container {
@@ -32,14 +33,7 @@
 
 .header {
   background: #ff6a00;
-}
-@media (max-width: 767px) {
-  .header .container {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-  }
+  width: 100%;
 }
 .header .container {
   display: flex;
@@ -84,6 +78,10 @@
 
 
 
+main.container {
+  overflow-x: auto;
+}
+
 main.container table {
   width: 100%;
   margin-top: 15px;
@@ -127,4 +125,27 @@ th{
 }
 .chip.priority-low {
   background: rgb(191, 176, 16);
+}
+
+@media (max-width: 767px) {
+  .header .container {
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .header nav {
+    width: 100%;
+  }
+
+  .header .container > nav > ul {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  main.container table {
+    min-width: 520px;
+    font-size: 14px;
+  }
 }
