@@ -1,4 +1,5 @@
 package com.example.roadmaptracker.dto;
 
-public class StatusRequest {
+public record StatusRequest(String name, Integer position, String color)
+{
 }
