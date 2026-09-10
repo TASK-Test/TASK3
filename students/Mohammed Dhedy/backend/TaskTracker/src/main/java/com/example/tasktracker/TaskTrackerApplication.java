@@ -12,5 +12,13 @@ public class TaskTrackerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskTrackerApplication.class, args);
 	}
-
+@Bean
+CommandLineRunner test(UserRepository repository){
+	return args->{
+		User user=new User();
+		user.setName("mohammed");
+		repository.save(user);
+		System.out.println("user is : " +user.getId() + " "+ user.getName());
+	};
+}
 }
