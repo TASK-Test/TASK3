@@ -31,7 +31,18 @@ public class StatusService {
 
     public StatusResponse get(Long id) {
         Status status = statusRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
-
         return StatusMapper.toResponse(status);
+    }
+    public StatusResponse update(Long id, StatusRequest request) {
+        Status status = statusRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
+        status.setName(request.name());
+        status.setPosition(request.position());
+        status.setColor(request.color());
+        Status updated = statusRepository.save(status);
+        return StatusMapper.toResponse(updated);
+    }
+    public void delete(Long id) {
+        Status status = statusRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
+        statusRepository.delete(status);
     }
 }

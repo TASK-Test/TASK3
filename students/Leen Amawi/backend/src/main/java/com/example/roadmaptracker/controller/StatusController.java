@@ -32,4 +32,14 @@ public class StatusController {
     public ResponseEntity<StatusResponse> get(@PathVariable Long id) {
         return ResponseEntity.ok(statusService.get(id));
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<StatusResponse> update(@PathVariable Long id, @RequestBody StatusRequest request) {
+        return ResponseEntity.ok(statusService.update(id, request));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        statusService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
