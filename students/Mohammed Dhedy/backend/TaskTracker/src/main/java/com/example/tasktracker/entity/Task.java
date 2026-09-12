@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.EnumType;
 import java.time.LocalDate;
 import java.time.Instant;
-import com.example.tasktracker.entity.Priority;
 
 @Entity
 @Table(name="tasks")
