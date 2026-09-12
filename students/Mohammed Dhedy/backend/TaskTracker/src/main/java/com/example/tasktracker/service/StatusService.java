@@ -32,4 +32,20 @@ private final StatusRepository repository;
         Status status=repository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"status not found"));
         return StatusMapper.toResponse(status);
     }
+
+    public StatusResponse update(Long id,StatusRequest request){
+        Status status=repository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"status not found"));
+        status.setName(request.name());
+        status.setPosition(request.position());
+        status.setColor(request.color());
+        Status updated=repository.save(status);
+        return StatusMapper.toResponse(status);
+    }
+
+    public void delete(Long id){
+        if(!repository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"status not found");
+        }
+        repository.deleteById(id);
+    }
 }

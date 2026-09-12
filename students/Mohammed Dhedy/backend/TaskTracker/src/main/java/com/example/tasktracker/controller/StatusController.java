@@ -7,8 +7,10 @@ import com.example.tasktracker.dto.statusdtos.StatusResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +27,7 @@ public class StatusController{
     public List<StatusResponse> list(){
         return service.list();
     }
-    
+
     @PostMapping
     public ResponseEntity<StatusResponse> create(@RequestBody StatusRequest request){
         StatusResponse response=service.create(request);
@@ -36,4 +38,13 @@ public class StatusController{
         return service.get(id);
     }
 
+    @PutMapping("/{id}")
+    public StatusResponse update(@PathVariable Long id, @RequestBody StatusRequest request){
+        return service.update(id,request);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

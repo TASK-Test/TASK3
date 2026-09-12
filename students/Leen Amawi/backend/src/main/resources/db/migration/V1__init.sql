@@ -1,0 +1,30 @@
+CREATE TABLE app_user (
+ id BIGSERIAL PRIMARY KEY,
+username VARCHAR(255) NOT NULL UNIQUE,
+ email VARCHAR(255) NOT NULL UNIQUE,
+display_name VARCHAR(255),
+ password_hash VARCHAR(255) NOT NULL,
+ role VARCHAR(50) NOT NULL,
+ created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE status (
+ id BIGSERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL UNIQUE,
+ position INT NOT NULL,
+color VARCHAR(255)
+);
+
+CREATE TABLE task (
+ id BIGSERIAL PRIMARY KEY,
+title VARCHAR(255) NOT NULL,
+ description TEXT,
+ status_id BIGINT NOT NULL,
+priority VARCHAR(50) NOT NULL,
+target_date DATE,
+created_by BIGINT NOT NULL,
+created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
+CONSTRAINT fk_task_status FOREIGN KEY (status_id) REFERENCES status(id),
+CONSTRAINT fk_task_created_by FOREIGN KEY (created_by) REFERENCES app_user(id)
+);
