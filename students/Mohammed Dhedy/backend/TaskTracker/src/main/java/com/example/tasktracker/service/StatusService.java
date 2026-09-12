@@ -39,7 +39,7 @@ private final StatusRepository repository;
         status.setPosition(request.position());
         status.setColor(request.color());
         Status updated=repository.save(status);
-        return StatusMapper.toResponse(status);
+        return StatusMapper.toResponse(updated);
     }
 
     public void delete(Long id){
