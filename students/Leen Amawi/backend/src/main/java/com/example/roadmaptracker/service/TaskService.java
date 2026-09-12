@@ -5,9 +5,9 @@ import com.example.roadmaptracker.dto.TaskResponse;
 import com.example.roadmaptracker.repository.StatusRepository;
 import com.example.roadmaptracker.repository.TaskRepository;
 import com.example.roadmaptracker.repository.UserRepository;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
-
+@Service
 public class TaskService {
 
     private final TaskRepository taskRepository;
@@ -30,5 +30,15 @@ public class TaskService {
 
     public TaskResponse get(Long id) {
         throw new UnsupportedOperationException();
+    }
+
+    public TaskResponse update(Long id, TaskRequest request) {
+        throw new UnsupportedOperationException();
+
+    }
+
+    public void delete(Long id) {
+        throw new UnsupportedOperationException();
+
     }
 }
