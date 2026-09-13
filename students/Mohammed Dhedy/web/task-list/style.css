@@ -114,7 +114,7 @@ th{
   background: red;
 }
 .chip.status-in-progress {
-  background: rgb(55, 55, 244);
+  background: rgb(55, 140, 244);
 }
 
 .chip.priority-high {

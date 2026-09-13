@@ -1,0 +1,9 @@
+.table_row{
+    width: 100%;
+}
+.row_cell{
+    padding: 10px;
+    background: rgb(66, 65, 65);
+    border: solid 1px rgb(205, 203, 203);
+    text-align: center;
+}
