@@ -1,0 +1,11 @@
+.priority-low {
+  color: green;
+}
+
+.priority-medium {
+  color: orange;
+}
+
+.priority-high {
+  color: red;
+}
