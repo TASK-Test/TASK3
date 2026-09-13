@@ -1,9 +1,14 @@
 .table_row{
     width: 100%;
 }
+.table_row:hover .row_cell{
+    background: var(--accent-bg);
+}
 .row_cell{
     padding: 10px;
     background: rgb(66, 65, 65);
     border: solid 1px rgb(205, 203, 203);
     text-align: center;
+    transition:200ms;
+    border:solid 1px var(--accent-border);
 }
