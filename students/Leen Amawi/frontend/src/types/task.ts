@@ -1,20 +1,13 @@
-export type Status = {
-  id: number
-  name: string
-  color: string
-  position: number
-}
-
- export type Priority = {
-  priority: 'LOW' | 'MEDIUM' | 'HIGH'
-} 
+export type Priority = 'LOW' | 'MEDIUM' | 'HIGH'
 
 export type Task = {
   id: number
   title: string
   description: string
+  statusId: number
   priority: Priority
   targetDate: string
-  status: Status
+  createdById: number
   createdAt: string
+  updatedAt: string
 }
