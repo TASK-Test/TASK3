@@ -1,0 +1,77 @@
+.not_found {
+  background: var(--accent-bg);
+  padding: 10px;
+  color: var(--text);
+}
+.taskCard {
+  width: 100%;
+  background: rgb(66, 65, 65);
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.taskCard > span {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+  text-align: center;
+}
+.taskCard .info {
+  background: var(--accent-bg);
+  color: white;
+  padding: 8px;
+  border-radius: 16px;
+  position: relative;
+  margin: 20px 0;
+}
+.taskCard .info::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: wheat;
+}
+.badges {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.badges span {
+  width: 35% !important;
+  margin: 0 !important;
+}
+.LOW {
+  background-color: #bfb010;
+}
+.MEDIUM {
+  background-color: #ff7802;
+}
+.HIGH {
+  background-color: #750202;
+}
+
+.infoTable {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.infoTable > div {
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--social-bg);
+  width: 28%;
+  min-width: 150px;
+  flex-grow: 1;
+}
+.back {
+  cursor: pointer;
+  text-align: right;
+  margin-bottom: 20px;
+}

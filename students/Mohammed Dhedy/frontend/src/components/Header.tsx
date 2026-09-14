@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Header = () => {
   return (
     <header
@@ -10,6 +12,9 @@ const Header = () => {
     >
       <h1>RoadmapTracker</h1>
       <p style={{ color: "#bebebe" }}>track your tasks professionally</p>
+      <Link style={{ textDecoration: "none", color: "var(--text)" }} to="/tasks">
+        Tasks
+      </Link>
     </header>
   );
 };
