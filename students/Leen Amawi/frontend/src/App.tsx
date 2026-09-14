@@ -3,6 +3,7 @@ import Header from "./components/Header"
 import TaskList from "./components/TaskList"
 import { tasks } from "./mock/tasks"
 import './App.css'
+import FilterBar from "./components/Filter"
 
 
 function App() {
@@ -16,29 +17,18 @@ const filteredTasks = tasks.filter((task) => {
   return matchesSearch && matchesStatus }).sort((a, b) => {
     if (!sortByDate) return 0
     return (
-      new Date(a.targetDate).getTime() -
-      new Date(b.targetDate).getTime()
+      new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime()
     )
   })
 
-  return (
-    <div>
-      <Header />
-      <input className="search" type="text" placeholder="Search" value={search} onChange={(event) => setSearch(event.target.value)}/>
-      <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
-          <option value="ALL">All statuses</option>
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
-        <label>
-        <input type="checkbox" checked={sortByDate} onChange={(event) => setSortByDate(event.target.checked)}/>
-        Sort by target date </label>
+  return(
+<div>
+   <Header />
 
-     {filteredTasks.length > 0 ? (<TaskList tasks={filteredTasks} />) : (<p>No tasks found.</p>)}
-
-    </div>
-  )
+   <FilterBar search={search}  setSearch={setSearch} statusFilter={statusFilter} setStatusFilter={setStatusFilter} sortByDate={sortByDate} setSortByDate={setSortByDate} />
+    
+    {filteredTasks.length > 0 ? (<TaskList tasks={filteredTasks} />) : (<p>No tasks found.</p>)}
+</div>  )
 }
 
 export default App
