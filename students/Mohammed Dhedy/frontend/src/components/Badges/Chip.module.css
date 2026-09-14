@@ -1,0 +1,17 @@
+.chip {
+  border-radius: 20px;
+  padding: 3px 10px;
+  width: 85%;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+.LOW {
+  background-color: #bfb010;
+}
+.MEDIUM {
+  background-color: #ff7802;
+}
+.HIGH {
+  background-color: #750202;
+}
