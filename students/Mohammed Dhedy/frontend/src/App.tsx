@@ -2,77 +2,50 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import type { Task } from "./types/task";
-import TaskRow from "./components/TaskRow/TaskRow";
+import { tasks } from "./mock/tasks";
+import TaskList from "./components/TaskList/TaskList";
+import FilterBar from "./components/FilterBar/FilterBar";
 function App() {
-  const [mockTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: "study ts",
-      description: "study ts data types and arrow functions",
-      status: {
-        id: 1,
-        name: "Done",
-        position: 2,
-        color: "#22C55E",
-      },
-      priority: "HIGH",
-      targetDate: "2026-9-22",
-      createdById: 1,
-      createdAt: "026-09-13T10:30:00Z",
-      updatedAt: null,
-    },
-    {
-      id: 2,
-      title: "work on project",
-      description: null,
-      status: {
-        id: 2,
-        name: "BackLog",
-        position: 0,
-        color: "#ee7c7c",
-      },
-      priority: "LOW",
-      targetDate: "2026-9-23",
-      createdById: 1,
-      createdAt: "026-09-13T10:30:00Z",
-      updatedAt: null,
-    },
-    {
-      id: 3,
-      title: "watch movie",
-      description: "watch spiderman:no way home",
-      status: {
-        id: 3,
-        name: "In Progress",
-        position: 1,
-        color: "#3B82F6",
-      },
-      priority: "MEDIUM",
-      targetDate: "2026-9-23",
-      createdById: 1,
-      createdAt: "026-09-13T10:30:00Z",
-      updatedAt: null,
-    },
-  ]);
-
+  const [mockTasks] = useState<Task[]>(tasks);
+  const [search, setSearch] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [targetDateFilter, setTargetDateFilter] = useState<string>("none");
+  let results: Task[] = [...mockTasks];
+  if (search.length > 0) {
+    results = mockTasks.filter((t) =>
+      t.title.toLowerCase().includes(search.toLowerCase()),
+    );
+  }
+  if (statusFilter !== "all") {
+    results = results.filter((t) => t.status.name === statusFilter);
+  }
+  if (targetDateFilter !== "none") {
+    if (targetDateFilter==="asc") {
+      results = results.sort(
+        (a, b) =>
+          new Date(a.targetDate || "").getTime() -
+          new Date(b.targetDate || "").getTime(),
+      );
+    } else {
+      results = results.sort(
+        (a, b) =>
+          new Date(b.targetDate || "").getTime() -
+          new Date(a.targetDate || "").getTime(),
+      );
+    }
+  }
   return (
     <>
       <Header />
-      <table>
-        <thead>
-          <tr>
-            <th>title</th>
-            <th>target date</th>
-            <th>status</th>
-            <th>priority</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mockTasks.map((task) => (
-            <TaskRow key={task.id} task={task} />
-          ))}
-        </tbody>
-      </table>
+      <FilterBar
+        setSearch={setSearch}
+        search={search}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        targetDateFilter={targetDateFilter}
+        setTargetDateFilter={setTargetDateFilter}
+      />
+      <TaskList tasks={results} />
     </>
   );
 }
