@@ -1,34 +1,20 @@
-import { useState } from "react"
-import Header from "./components/Header"
-import TaskList from "./components/TaskList"
-import { tasks } from "./mock/tasks"
-import './App.css'
-import FilterBar from "./components/Filter"
-
+import { Navigate, Route, Routes } from 'react-router-dom'
+import Layout from './components/Layout'
+import TaskListPage from './pages/TaskListPage'
+import TaskDetail from './pages/TaskDetail'
+import NotFound from './pages/NotFound'
 
 function App() {
-  const [search, setSearch] = useState('')
-const [statusFilter, setStatusFilter] = useState('ALL')
-const [sortByDate, setSortByDate] = useState(false)
-
-const filteredTasks = tasks.filter((task) => {
-  const matchesSearch = task.title .toLowerCase().includes(search.toLowerCase())
-  const matchesStatus =statusFilter === 'ALL' || task.status.name === statusFilter
-  return matchesSearch && matchesStatus }).sort((a, b) => {
-    if (!sortByDate) return 0
-    return (
-      new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime()
-    )
-  })
-
-  return(
-<div>
-   <Header />
-
-   <FilterBar search={search}  setSearch={setSearch} statusFilter={statusFilter} setStatusFilter={setStatusFilter} sortByDate={sortByDate} setSortByDate={setSortByDate} />
-    
-    {filteredTasks.length > 0 ? (<TaskList tasks={filteredTasks} />) : (<p>No tasks found.</p>)}
-</div>  )
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Navigate to="/tasks" replace />}/>
+        <Route path="/tasks" element={<TaskListPage />}/>
+        <Route path="/tasks/:id" element={<TaskDetail />}/>
+        <Route path="*" element={<NotFound />}/>
+      </Route>
+    </Routes>
+  )
 }
 
 export default App
