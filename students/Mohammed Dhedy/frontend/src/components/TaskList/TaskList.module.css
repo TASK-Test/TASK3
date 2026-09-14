@@ -9,7 +9,7 @@
         font-size: 13px;
     }
 }
-.empty_list{
+.warning{
     text-align: center;
     text-transform: capitalize;
     background: var(--accent-bg);
