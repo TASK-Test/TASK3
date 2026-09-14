@@ -1,17 +1,23 @@
 import type { Task } from '../types/task'
 import PriorityBadge from './PriorityBadge'
 import StatusChip from './StatusChip'
+import './taskRow.css'
+
 type TaskRowProps = {
   task: Task
 }
+
 function TaskRow({ task }: TaskRowProps) {
   return (
-    <div>
-     <h3>{task.title}</h3>
-      <PriorityBadge priority={task.priority} />
-      <StatusChip status={task.status} />
-      <p>{task.targetDate}</p>
-    </div>
+    <table>
+    <tr className="task-row">
+      <td>{task.title}</td>
+      <td><PriorityBadge priority={task.priority} /> </td>
+      <td> <StatusChip status={task.status} /> </td>
+      <td>{task.targetDate}</td>
+    </tr>
+    </table>
   )
 }
+
 export default TaskRow
