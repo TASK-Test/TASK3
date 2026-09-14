@@ -5,7 +5,7 @@ export const tasks: Task[] = [
     id: 1,
     title: 'Fix login',
     description: 'Fix the login problem',
-    priority: 'HIGH',
+    priority: { priority: 'HIGH' },
     targetDate: '2026-09-15',
     status: {
       id: 1,
@@ -19,7 +19,7 @@ export const tasks: Task[] = [
     id: 2,
     title: 'Add dashboard',
     description: 'Create the dashboard page',
-    priority: 'LOW',
+    priority: { priority: 'LOW' },
     targetDate: '2026-09-18',
     status: {
       id: 2,
@@ -33,7 +33,7 @@ export const tasks: Task[] = [
     id: 3,
     title: 'Write tests',
     description: 'Add tests for the app',
-    priority: 'MEDIUM',
+    priority: { priority: 'MEDIUM' },
     targetDate: '2026-09-20',
     status: {
       id: 3,
@@ -47,7 +47,7 @@ export const tasks: Task[] = [
     id: 4,
     title: 'Update profile',
     description: 'Update the profile page',
-    priority: 'HIGH',
+    priority: { priority: 'MEDIUM' },
     targetDate: '2026-09-22',
     status: {
       id: 4,
@@ -61,7 +61,7 @@ export const tasks: Task[] = [
     id: 5,
     title: 'Fix database',
     description: 'Fix the database connection',
-    priority: 'HIGH',
+    priority: { priority: 'HIGH' },
     targetDate: '2026-09-25',
     status: {
       id: 5,
