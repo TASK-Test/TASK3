@@ -20,7 +20,7 @@ function App() {
     results = results.filter((t) => t.status.name === statusFilter);
   }
   if (targetDateFilter !== "none") {
-    if (targetDateFilter.match("asc")) {
+    if (targetDateFilter==="asc") {
       results = results.sort(
         (a, b) =>
           new Date(a.targetDate || "").getTime() -
