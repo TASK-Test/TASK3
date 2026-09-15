@@ -1,5 +1,4 @@
 package com.example.roadmaptracker.service;
-
 import com.example.roadmaptracker.dto.TaskRequest;
 import com.example.roadmaptracker.dto.TaskResponse;
 import com.example.roadmaptracker.repository.StatusRepository;
@@ -7,6 +6,8 @@ import com.example.roadmaptracker.repository.TaskRepository;
 import com.example.roadmaptracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import com.example.roadmaptracker.entity.Task;
+import com.example.roadmaptracker.mapper.TaskMapper;
 @Service
 public class TaskService {
 
@@ -25,11 +26,12 @@ public class TaskService {
     }
 
     public List<TaskResponse> list() {
-        throw new UnsupportedOperationException();
+        return taskRepository.findAll().stream().map(TaskMapper::toResponse).toList();
     }
 
     public TaskResponse get(Long id) {
-        throw new UnsupportedOperationException();
+        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+    return TaskMapper.toResponse(task);
     }
 
     public TaskResponse update(Long id, TaskRequest request) {
