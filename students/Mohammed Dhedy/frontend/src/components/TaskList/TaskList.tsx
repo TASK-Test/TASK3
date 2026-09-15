@@ -6,6 +6,7 @@ import type { Task } from "../../types/task";
 import TaskRow from "../TaskRow/TaskRow";
 import FilterBar from "../FilterBar/FilterBar";
 import { getTasks } from "../../api/client";
+import ActionButton from "../ActionButton/ActionButton";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -23,15 +24,16 @@ const TaskList = () => {
         const res: Task[] = await getTasks();
         if (!ignore) setTasks(res);
       } catch (error) {
-        if(!ignore)setError(error instanceof Error ? error.message : "unexpected error");
+        if (!ignore)
+          setError(error instanceof Error ? error.message : "unexpected error");
       } finally {
-        if(!ignore)setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
     getRes();
-    return()=>{
-      ignore=true;
-    }
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   if (search.length > 0) {
@@ -62,6 +64,7 @@ const TaskList = () => {
 
   return (
     <>
+      <ActionButton title="Create Task" path="/tasks/new" />
       <FilterBar
         setSearch={setSearch}
         search={search}
