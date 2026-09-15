@@ -1,12 +1,13 @@
 import styles from "./TaskForm.module.css";
 
 import { useEffect, useState } from "react";
-import type { Priority, Status } from "../../types/task";
+import type { Priority, Status, TaskRequest } from "../../types/task";
 import SelectField from "../InputFields/SelectField";
 import TextField from "../InputFields/TextField";
-import { getStatuses } from "../../api/client";
+import { createTask, getStatuses } from "../../api/client";
 import ActionButton from "../ActionButton/ActionButton";
 import QuickMessage from "../QuickMessaage/QuickMessage";
+import { useNavigate } from "react-router-dom";
 type fieldsType = {
   title: string;
   description: string;
@@ -15,18 +16,22 @@ type fieldsType = {
   statusId: number;
 };
 const TaskForm = () => {
+  const navigate = useNavigate();
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [error, setError] = useState<string>("");
+  const [submitError, setSubmitError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [formFields, setFormFields] = useState<fieldsType>(
-    {
-      title: "",
-      description: "",
-      priority: "LOW",
-      targetDate: "",
-      statusId: 0,
-    },
-  );
+  const [validateError, setValidateError] = useState<{
+    title?: string;
+    targetDate?: string;
+  }>({});
+  const [formFields, setFormFields] = useState<fieldsType>({
+    title: "",
+    description: "",
+    priority: "LOW",
+    targetDate: "",
+    statusId: 0,
+  });
 
   useEffect(() => {
     const getRes = async () => {
@@ -34,7 +39,9 @@ const TaskForm = () => {
         const response: Status[] = await getStatuses();
         const firstStatus = response[0];
         if (!firstStatus) {
-          throw new Error("No statuses available. Add a status before creating a task.");
+          throw new Error(
+            "No statuses available. Add a status before creating a task.",
+          );
         }
         setStatuses(response);
         setFormFields((prev) => ({ ...prev, statusId: firstStatus.id }));
@@ -47,10 +54,44 @@ const TaskForm = () => {
       }
     };
     getRes();
-  },[]);
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  }, []);
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    const errors = { title: "", targetDate: "" };
     e.preventDefault();
-    console.log({ ...formFields, createdById: 1 });
+    setSubmitError("");
+    const payload: TaskRequest = {
+      ...formFields,
+      createdById: 1,
+      title: formFields.title.trim(),
+      description: formFields.description.trim(),
+    };
+    if (payload.title.trim() === "") {
+      errors.title = "title cant be empty !";
+    }
+    if (payload.targetDate.trim() === "") {
+      errors.targetDate = "target date cant be empty !";
+    } else {
+      const date = new Date(payload.targetDate);
+      if (
+        Number.isNaN(date.getTime()) ||
+        date.toISOString().slice(0, 10) !== payload.targetDate
+      ) {
+        errors.targetDate = "Enter a valid date";
+      }
+    }
+    setValidateError(errors);
+    if (errors.title.length > 0 || errors.targetDate.length > 0) {
+      return;
+    }
+    try {
+      const response = await createTask(payload);
+      console.log(response);
+      navigate("/tasks");
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "something went wrong !",
+      );
+    }
   };
   return (
     <>
@@ -61,6 +102,7 @@ const TaskForm = () => {
       ) : (
         <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
           <h2>Create New Task</h2>
+          <p style={{ color: "red" }}>{submitError}</p>
           <TextField
             label="Title"
             type="text"
@@ -70,6 +112,7 @@ const TaskForm = () => {
               setFormFields((prev) => ({ ...prev, title: value }))
             }
           />
+          <p style={{ color: "red" }}>{validateError.title}</p>
           <TextField
             label="Description"
             type="text"
@@ -88,6 +131,7 @@ const TaskForm = () => {
               setFormFields((prev) => ({ ...prev, targetDate: value }))
             }
           />
+          <p style={{ color: "red" }}>{validateError.targetDate}</p>
           <SelectField
             label="Status"
             fieldValue={String(formFields.statusId)}
