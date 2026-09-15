@@ -6,6 +6,7 @@ import PriorityBadge from "../Badges/PriorityBadge/PriorityBadge";
 import StatusChip from "../Badges/StatusChip/StatusChip";
 import { useEffect, useState } from "react";
 import { getTask } from "../../api/client";
+import QuickMessage from "../QuickMessaage/QuickMessage";
 const TaskDetails = () => {
   const [task, setTask] = useState<Task>();
   const [error, setError] = useState<string>("");
@@ -36,13 +37,13 @@ const TaskDetails = () => {
   return (
     <>
       {loading ? (
-        <p className={styles.warning}>loading ... </p>
+        <QuickMessage message="loading ..."/>
       ) : error ? (
-        <p className={styles.warning}>{error}</p>
+        <QuickMessage message={error}/>
       ) : task !== undefined ? (
         <>
-          <p onClick={() => navigate(-1)} className={styles.back}>
-            Back To Tasks -{">"}
+          <p className={styles.back}>
+            <span onClick={() => navigate(-1)}>Back To Tasks -{">"}</span>
           </p>
           <section className={styles.taskCard}>
             <span>Task #{taskId}</span>
@@ -66,7 +67,7 @@ const TaskDetails = () => {
           </section>
         </>
       ) : (
-        <p className={styles.not_found}>Task is not Found :(</p>
+        <QuickMessage message="Task is not Found :("/>
       )}
     </>
   );

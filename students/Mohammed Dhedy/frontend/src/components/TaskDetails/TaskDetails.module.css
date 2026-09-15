@@ -1,8 +1,4 @@
-.not_found {
-  background: var(--accent-bg);
-  padding: 10px;
-  color: var(--text);
-}
+
 .taskCard {
   width: 100%;
   background: rgb(66, 65, 65);
@@ -71,13 +67,9 @@
   flex-grow: 1;
 }
 .back {
-  cursor: pointer;
   text-align: right;
   margin-bottom: 20px;
 }
-.warning{
-    text-align: center;
-    text-transform: capitalize;
-    background: var(--accent-bg);
-    padding:5px;
+.back span{
+  cursor: pointer;
 }
