@@ -1,11 +1,22 @@
-import type { Status } from '../types/task'
-
 type StatusChipProps = {
-  status: Status
+  statusId: number
 }
-const StatusChip = ({ status }: StatusChipProps) => {
-    return (
-        <span style={{ backgroundColor: status.color, color: 'white', padding: '4px 8px', borderRadius: '4px' }}>{status.name}</span>
-    )
+
+const statuses = {
+  1: { name: 'Backlog', color: '#6B7280' },
+  2: { name: 'In Progress', color: '#3B82F6' },
+  3: { name: 'Done', color: '#22C55E' },
 }
+
+function StatusChip({ statusId }: StatusChipProps) {
+  const status = statuses[statusId as 1 | 2 | 3]
+
+  if (!status) {
+    return <span>Unknown</span>
+  }
+  return (
+    <span  > {status.name}</span>
+  )
+}
+
 export default StatusChip
