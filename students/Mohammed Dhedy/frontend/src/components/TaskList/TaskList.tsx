@@ -1,24 +1,41 @@
 import styles from "./TaskList.module.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Task } from "../../types/task";
 import TaskRow from "../TaskRow/TaskRow";
 import FilterBar from "../FilterBar/FilterBar";
+import { getTasks } from "../../api/client";
 
-type TaskListProps = {
-  tasks: Task[];
-};
-const TaskList = (props: TaskListProps) => {
-
+const TaskList = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [search, setSearch] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [targetDateFilter, setTargetDateFilter] = useState<string>("none");
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  let results: Task[] = [...tasks];
 
-  let results: Task[] = [...props.tasks];
+  useEffect(() => {
+    let ignore = false;
+    const getRes = async () => {
+      try {
+        const res: Task[] = await getTasks();
+        if (!ignore) setTasks(res);
+      } catch (error) {
+        if(!ignore)setError(error instanceof Error ? error.message : "unexpected error");
+      } finally {
+        if(!ignore)setLoading(false);
+      }
+    };
+    getRes();
+    return()=>{
+      ignore=true;
+    }
+  }, []);
 
   if (search.length > 0) {
-    results = props.tasks.filter((t) =>
+    results = tasks.filter((t) =>
       t.title.toLowerCase().includes(search.toLowerCase()),
     );
   }
@@ -42,7 +59,7 @@ const TaskList = (props: TaskListProps) => {
       );
     }
   }
-  
+
   return (
     <>
       <FilterBar
@@ -53,8 +70,12 @@ const TaskList = (props: TaskListProps) => {
         targetDateFilter={targetDateFilter}
         setTargetDateFilter={setTargetDateFilter}
       />
-      {results.length < 1 ? (
-        <p className={styles.empty_list}>there is no tasks :(</p>
+      {loading ? (
+        <p className={styles.warning}>loading ... </p>
+      ) : error ? (
+        <p className={styles.warning}>{error}</p>
+      ) : results.length < 1 ? (
+        <p className={styles.warning}>there is no tasks :(</p>
       ) : (
         <table>
           <thead>
