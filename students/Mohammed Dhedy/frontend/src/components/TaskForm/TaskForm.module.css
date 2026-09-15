@@ -1,0 +1,17 @@
+.form{
+    width:100%;
+    background: var(--code-bg);
+    border-radius: 20px;
+    padding:15px;
+    display: flex;
+    flex-direction: column;
+    align-items:start;
+    gap:10px;
+}
+.form button{
+    margin:0 auto;
+}
+.form h2{
+    text-align: center;
+    width:100%;
+}
