@@ -22,7 +22,23 @@ public class TaskService {
     }
 
     public TaskResponse create(TaskRequest request) {
-        throw new UnsupportedOperationException();
+        var status = statusRepository.findById(request.statusId())
+            .orElseThrow(() -> new RuntimeException("Status not found"));
+
+    var user = userRepository.findById(1L)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    Task task = new Task();
+    task.setTitle(request.title());
+    task.setDescription(request.description());
+    task.setStatus(status);
+    task.setPriority(request.priority());
+    task.setTargetDate(request.targetDate());
+    task.setCreatedBy(user);
+
+    Task savedTask = taskRepository.save(task);
+
+    return TaskMapper.toResponse(savedTask);
     }
 
     public List<TaskResponse> list() {
