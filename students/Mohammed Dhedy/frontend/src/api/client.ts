@@ -1,5 +1,5 @@
 const BASE_URL: string = "/api";
-import type { Task } from "../types/task";
+import type { Status, Task } from "../types/task";
 
 const getTasks = async (): Promise<Task[]> => {
   const response = await fetch(`${BASE_URL}/tasks`);
@@ -17,4 +17,11 @@ const getTask = async (id: number): Promise<Task> => {
   }
   return response.json();
 };
-export { getTasks, getTask };
+const getStatuses = async (): Promise<Status[]> => {
+  const response = await fetch(`${BASE_URL}/statuses`);
+  if (!response.ok) {
+    throw new Error("could not create task");
+  }
+  return response.json();
+};
+export { getTasks, getTask, getStatuses };
