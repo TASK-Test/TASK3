@@ -7,6 +7,7 @@ import TaskRow from "../TaskRow/TaskRow";
 import FilterBar from "../FilterBar/FilterBar";
 import { getTasks } from "../../api/client";
 import ActionButton from "../ActionButton/ActionButton";
+import QuickMessage from "../QuickMessaage/QuickMessage";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -74,11 +75,11 @@ const TaskList = () => {
         setTargetDateFilter={setTargetDateFilter}
       />
       {loading ? (
-        <p className={styles.warning}>loading ... </p>
+        <QuickMessage message="loading ..."/>
       ) : error ? (
-        <p className={styles.warning}>{error}</p>
+        <QuickMessage message={error}/>
       ) : results.length < 1 ? (
-        <p className={styles.warning}>there is no tasks :(</p>
+        <QuickMessage message="there is no tasks"/>
       ) : (
         <table>
           <thead>

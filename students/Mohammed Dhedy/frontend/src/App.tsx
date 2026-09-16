@@ -15,6 +15,7 @@ function App() {
           <Route path="/tasks/:taskId" element={<TaskDetails/>}/>
           <Route path="*" element={<NotFound/>}/>
           <Route path="/tasks/new" element={<TaskForm/>}/>
+          <Route path="/tasks/:taskId/edit" element={<TaskForm/>}/>
         </Route>
       </Routes>
     </>

@@ -1,17 +1,16 @@
 import styles from "./TaskDetails.module.css";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Task } from "../../types/task";
 import PriorityBadge from "../Badges/PriorityBadge/PriorityBadge";
 import StatusChip from "../Badges/StatusChip/StatusChip";
 import { useEffect, useState } from "react";
-import { getTask } from "../../api/client";
+import { deleteTask, getTask } from "../../api/client";
 import QuickMessage from "../QuickMessaage/QuickMessage";
 const TaskDetails = () => {
   const [task, setTask] = useState<Task>();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-
   const { taskId } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
@@ -34,12 +33,29 @@ const TaskDetails = () => {
       ignore = true;
     };
   }, [taskId]);
+
+  const handleDelete = async () => {
+    try {
+      if (!task) return;
+      const result = window.confirm(
+        "are you sure you want to delete this task?",
+      );
+      if (result) {
+        await deleteTask(task.id);
+        navigate("/tasks");
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "could not delete Task";
+      window.alert(message);
+    }
+  };
   return (
     <>
       {loading ? (
-        <QuickMessage message="loading ..."/>
+        <QuickMessage message="loading ..." />
       ) : error ? (
-        <QuickMessage message={error}/>
+        <QuickMessage message={error} />
       ) : task !== undefined ? (
         <>
           <p className={styles.back}>
@@ -64,10 +80,16 @@ const TaskDetails = () => {
               <div>created at : {task.createdAt}</div>
               <div>last updated at : {task.updatedAt || "no updates"}</div>
             </div>
+            <div className={styles.badges}>
+              <Link to={`/tasks/${task.id}/edit`}>Update</Link>
+              <button type="button" onClick={handleDelete}>
+                Delete
+              </button>
+            </div>
           </section>
         </>
       ) : (
-        <QuickMessage message="Task is not Found :("/>
+        <QuickMessage message="Task is not Found :(" />
       )}
     </>
   );

@@ -18,7 +18,7 @@ const FilterBar = (props: filterBarProps) => {
       />
       <select value={props.statusFilter} onChange={(e)=>props.setStatusFilter(e.target.value)} className={styles.dropdown_menu}>
         <option value="all">filter by status(all)</option>
-        <option value="BackLog">backlog</option>
+        <option value="Backlog">backlog</option>
         <option value="In Progress">in progres</option>
         <option value="Done">done</option>
       </select>
