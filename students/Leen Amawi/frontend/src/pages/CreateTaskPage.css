@@ -1,0 +1,61 @@
+
+.create-task-page {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.create-task-page h1 {
+  margin-bottom: 25px;
+}
+
+.create-task-page form {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-task-page form > div {
+  margin-bottom: 20px;
+}
+
+.create-task-page label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.create-task-page input,
+.create-task-page textarea,
+.create-task-page select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.create-task-page textarea {
+  height: 100px;
+}
+
+.create-task-page p {
+  color: red;
+  margin-top: 5px;
+}
+
+.create-task-page button {
+  width: 100%;
+  padding: 10px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-task-page button:hover {
+  background: #1d4ed8;
+}
+
