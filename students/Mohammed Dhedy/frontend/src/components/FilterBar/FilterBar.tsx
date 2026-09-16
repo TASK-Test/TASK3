@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./FilterBar.module.css";
 import type { Status } from "../../types/task";
 import { getStatuses } from "../../api/client";
-import QuickMessage from "../QuickMessaage/QuickMessage";
+import QuickMessage from "../QuickMessage/QuickMessage";
 type filterBarProps = {
   search: string;
   statusFilter: string;

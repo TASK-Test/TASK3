@@ -6,7 +6,7 @@ import SelectField from "../../components/InputFields/SelectField";
 import TextField from "../../components/InputFields/TextField";
 import { createTask, getStatuses, getTask, updateTask } from "../../api/client";
 import ActionButton from "../../components/ActionButton/ActionButton";
-import QuickMessage from "../../components/QuickMessaage/QuickMessage";
+import QuickMessage from "../../components/QuickMessage/QuickMessage";
 import { useNavigate, useParams } from "react-router-dom";
 type fieldsType = {
   title: string;
@@ -24,9 +24,9 @@ const TaskForm = () => {
   const [submitError, setSubmitError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [validateError, setValidateError] = useState<{
-    title?: string;
-    targetDate?: string;
-  }>({});
+    title: string;
+    targetDate: string;
+  }>({ title: "", targetDate: "" });
   const [formFields, setFormFields] = useState<fieldsType>({
     title: "",
     description: "",
@@ -39,7 +39,6 @@ const TaskForm = () => {
     const getRes = async () => {
       try {
         if (isEdit) {
-          console.log(isEdit, taskId);
           const taskRes: Task = await getTask(Number(taskId));
           setFormFields({
             title: taskRes.title,
@@ -128,13 +127,15 @@ const TaskForm = () => {
   return (
     <>
       {loading ? (
-        <QuickMessage message="loading ..." />
+        <QuickMessage type="loading" message="loading statuses" />
       ) : error ? (
-        <QuickMessage message={error} />
+        <QuickMessage type="error" message={error} />
       ) : (
         <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
           <h2>{isEdit ? `Update Task #${taskId}` : "Create New Task"}</h2>
-          <p style={{ color: "red" }}>{submitError}</p>
+          {submitError.length > 0 && (
+            <QuickMessage type="error" message={submitError} />
+          )}
           <TextField
             label="Title"
             type="text"
@@ -146,7 +147,9 @@ const TaskForm = () => {
                 setValidateError((prev) => ({ ...prev, title: "" }));
             }}
           />
-          <p style={{ color: "red" }}>{validateError.title}</p>
+          {validateError.title.length > 0 && (
+            <QuickMessage type="error" message={validateError.title} />
+          )}
           <TextField
             label="Description"
             type="text"
@@ -167,7 +170,9 @@ const TaskForm = () => {
                 setValidateError((prev) => ({ ...prev, targetDate: "" }));
             }}
           />
-          <p style={{ color: "red" }}>{validateError.targetDate}</p>
+          {validateError.targetDate.length > 0 && (
+            <QuickMessage type="error" message={validateError.targetDate} />
+          )}
           <SelectField
             label="Status"
             fieldValue={String(formFields.statusId)}

@@ -6,11 +6,12 @@ import PriorityBadge from "../../components/Badges/PriorityBadge/PriorityBadge";
 import StatusChip from "../../components/Badges/StatusChip/StatusChip";
 import { useEffect, useState } from "react";
 import { deleteTask, getTask } from "../../api/client";
-import QuickMessage from "../../components/QuickMessaage/QuickMessage";
+import QuickMessage from "../../components/QuickMessage/QuickMessage";
 const TaskDetails = () => {
   const [task, setTask] = useState<Task>();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [deleteError, setDeleteError] = useState("");
   const { taskId } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
@@ -47,20 +48,23 @@ const TaskDetails = () => {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "could not delete Task";
-      window.alert(message);
+      setDeleteError(message);
     }
   };
   return (
     <>
       {loading ? (
-        <QuickMessage message="loading ..." />
+        <QuickMessage type="loading" message="loading your task" />
       ) : error ? (
-        <QuickMessage message={error} />
+        <QuickMessage type="error" message={error} />
       ) : task !== undefined ? (
         <>
           <p className={styles.back}>
             <span onClick={() => navigate(-1)}>Back To Tasks -{">"}</span>
           </p>
+          {deleteError.length > 0 && (
+            <QuickMessage type="error" message={deleteError} />
+          )}
           <section className={styles.taskCard}>
             <span>Task #{taskId}</span>
             <div className={styles.badges}>
@@ -89,7 +93,7 @@ const TaskDetails = () => {
           </section>
         </>
       ) : (
-        <QuickMessage message="Task is not Found :(" />
+        <QuickMessage type="notFound" message="Task is not Found :(" />
       )}
     </>
   );

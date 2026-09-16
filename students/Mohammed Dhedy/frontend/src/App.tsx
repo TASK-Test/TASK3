@@ -1,5 +1,5 @@
 import "./App.css";
-import TaskList from "./components/TaskList/TaskList";
+import TaskList from "./pages/TaskList/TaskList";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/Layout/AppLayout";
 import TaskDetails from "./pages/TaskDetails/TaskDetails";

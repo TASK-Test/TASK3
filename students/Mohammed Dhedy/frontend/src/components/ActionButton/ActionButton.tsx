@@ -12,7 +12,9 @@ const ActionButton = ({ title, path }: CreateButtonProps) => {
           {title}
         </Link>
       ) : (
-        <button type="submit" className={styles.create}>{title}</button>
+        <button type="submit" className={styles.create}>
+          {title}
+        </button>
       )}
     </>
   );
