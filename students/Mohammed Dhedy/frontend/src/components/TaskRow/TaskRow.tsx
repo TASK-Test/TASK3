@@ -7,12 +7,27 @@ type TaskRowProps = {
   task: Task;
 };
 const TaskRow = (props: TaskRowProps) => {
+  const checkOverDue = (): boolean => {
+    const today=new Date();
+    today.setHours(0,0,0,0);
+    return (
+      new Date(props.task.targetDate) < today &&
+      props.task.status.name !== "Done"
+    );
+  };
   return (
     <tr className={styles.table_row}>
       <td className={styles.row_cell}>
-        <Link style={{textDecoration:"none",color:"white"}} to={`/tasks/${props.task.id}`}>{props.task.title}</Link>
+        <Link
+          style={{ textDecoration: "none", color: "white" }}
+          to={`/tasks/${props.task.id}`}
+        >
+          {props.task.title}
+        </Link>
       </td>
-      <td className={styles.row_cell}>
+      <td
+        className={`${styles.row_cell} ${checkOverDue() ? styles.overdue : ""}`}
+      >
         {props.task.targetDate || "Not specified"}
       </td>
       <td className={styles.row_cell}>
