@@ -149,7 +149,7 @@ const TaskForm = () => {
                 priority: value as Priority,
               }))
             }
-            optionsList={["LOW", "MEDIUM", "HIGH"]}
+            optionsList={["LOW", "MEDIUM", "HIGH"] as Priority[]}
           />
           <ActionButton title="Submit" />
         </form>
