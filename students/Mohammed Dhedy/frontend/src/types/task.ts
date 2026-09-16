@@ -26,3 +26,5 @@ export interface TaskRequest {
   targetDate: string;
   createdById: number;
 }
+
+export type MessagesType="error"|"empty"|"notFound"|"loading";
