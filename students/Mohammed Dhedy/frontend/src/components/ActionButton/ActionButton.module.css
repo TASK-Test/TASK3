@@ -1,0 +1,31 @@
+.create {
+  border: solid 1px var(--accent-border);
+  outline: none;
+  border-radius: 20px;
+  padding: 8px;
+  cursor: pointer;
+  background: none;
+  min-width: 180px;
+  max-width: 300px;
+  margin: 0 0 15px auto;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+}
+.create::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  background: var(--accent-border);
+  width: 30px;
+  transition: 300ms;
+  pointer-events: none;
+}
+.create:hover::before {
+  width: 100%;
+}
