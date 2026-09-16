@@ -33,3 +33,24 @@
 .task-detail strong {
   color: #1f2937;
 }
+button {
+  background-color: #eb2525;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+.task-link {
+   background-color: #3225eb;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+    text-decoration: none;
+   font-size: 16px;
+  color: white;
+}

@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { createTask } from '../api/client'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { createTask, getTask, updateTask } from '../api/client'
 import './CreateTaskPage.css'
 
 function CreateTaskPage() {
   const navigate = useNavigate()
+  const { id } = useParams()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [statusId, setStatusId] = useState('')
@@ -15,6 +16,20 @@ function CreateTaskPage() {
   targetDate?: string}>({})
 
   const [apiError, setApiError] = useState<string | null>(null)
+    const isEdit = Boolean(id)
+    useEffect(() => {
+    if (!id) return
+
+    getTask(Number(id)).then((task) => {
+        setTitle(task.title)
+        setDescription(task.description)
+        setStatusId(String(task.statusId))
+        setPriority(task.priority)
+        setTargetDate(task.targetDate)
+      }).catch(() => {
+        setApiError('Failed to load task.')
+      })}, [id])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -48,15 +63,21 @@ function CreateTaskPage() {
         priority,
         targetDate,
       }
-      await createTask(payload)
+     
+      if (isEdit) {
+        await updateTask(Number(id), payload)
+      } else {
+        await createTask(payload)
+      }
       navigate('/tasks')
     } catch (error) {
-      setApiError('Failed to create task. Please try again.')
+     setApiError(
+        isEdit ? 'Failed to update task. Please try again.' : 'Failed to create task. Please try again.')
     }
   }
   return (
     <div className="create-task-page">
-      <h1>Create Task</h1>
+      <h1>{isEdit ? 'Edit Task' : 'Create Task'}</h1>
       <form onSubmit={handleSubmit}>
         {apiError && <div>{apiError}</div>}
         <div>
@@ -92,7 +113,7 @@ function CreateTaskPage() {
           <input type="date" value={targetDate} onChange={(e) => setTargetDate(e.target.value)}/>
         {errors.targetDate && <p>{errors.targetDate}</p>}
         </div>
-        <button type="submit">Create Task</button>
+        <button type="submit">{isEdit ? 'Save Changes' : 'Create Task'}</button>
       </form>
     </div>
   )

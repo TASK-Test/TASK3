@@ -22,12 +22,8 @@ public class TaskService {
     }
 
     public TaskResponse create(TaskRequest request) {
-        var status = statusRepository.findById(request.statusId())
-            .orElseThrow(() -> new RuntimeException("Status not found"));
-
-    var user = userRepository.findById(1L)
-            .orElseThrow(() -> new RuntimeException("User not found"));
-
+    var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new RuntimeException("Status not found"));
+    var user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
     Task task = new Task();
     task.setTitle(request.title());
     task.setDescription(request.description());
@@ -35,9 +31,7 @@ public class TaskService {
     task.setPriority(request.priority());
     task.setTargetDate(request.targetDate());
     task.setCreatedBy(user);
-
     Task savedTask = taskRepository.save(task);
-
     return TaskMapper.toResponse(savedTask);
     }
 
@@ -51,12 +45,19 @@ public class TaskService {
     }
 
     public TaskResponse update(Long id, TaskRequest request) {
-        throw new UnsupportedOperationException();
-
+    Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+    var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new RuntimeException("Status not found"));
+    task.setTitle(request.title());
+    task.setDescription(request.description());
+    task.setStatus(status);
+    task.setPriority(request.priority());
+    task.setTargetDate(request.targetDate());
+    Task updatedTask = taskRepository.save(task);
+    return TaskMapper.toResponse(updatedTask);
     }
 
     public void delete(Long id) {
-        throw new UnsupportedOperationException();
-
+         Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+    taskRepository.delete(task);
     }
 }
