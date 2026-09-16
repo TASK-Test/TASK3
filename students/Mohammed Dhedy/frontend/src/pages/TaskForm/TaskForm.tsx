@@ -2,11 +2,11 @@ import styles from "./TaskForm.module.css";
 
 import { useEffect, useState } from "react";
 import type { Priority, Status, Task, TaskRequest } from "../../types/task";
-import SelectField from "../InputFields/SelectField";
-import TextField from "../InputFields/TextField";
+import SelectField from "../../components/InputFields/SelectField";
+import TextField from "../../components/InputFields/TextField";
 import { createTask, getStatuses, getTask, updateTask } from "../../api/client";
-import ActionButton from "../ActionButton/ActionButton";
-import QuickMessage from "../QuickMessaage/QuickMessage";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import QuickMessage from "../../components/QuickMessaage/QuickMessage";
 import { useNavigate, useParams } from "react-router-dom";
 type fieldsType = {
   title: string;

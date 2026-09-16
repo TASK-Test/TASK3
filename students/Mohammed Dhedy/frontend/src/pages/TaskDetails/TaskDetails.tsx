@@ -2,11 +2,11 @@ import styles from "./TaskDetails.module.css";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Task } from "../../types/task";
-import PriorityBadge from "../Badges/PriorityBadge/PriorityBadge";
-import StatusChip from "../Badges/StatusChip/StatusChip";
+import PriorityBadge from "../../components/Badges/PriorityBadge/PriorityBadge";
+import StatusChip from "../../components/Badges/StatusChip/StatusChip";
 import { useEffect, useState } from "react";
 import { deleteTask, getTask } from "../../api/client";
-import QuickMessage from "../QuickMessaage/QuickMessage";
+import QuickMessage from "../../components/QuickMessaage/QuickMessage";
 const TaskDetails = () => {
   const [task, setTask] = useState<Task>();
   const [error, setError] = useState<string>("");
