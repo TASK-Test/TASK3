@@ -4,7 +4,7 @@ import type { Status, Task, TaskRequest } from "../types/task";
 const getTasks = async (): Promise<Task[]> => {
   const response = await fetch(`${BASE_URL}/tasks`);
   if (!response.ok) {
-    throw new Error("something went wrong :(");
+    throw new Error("could not fetch tasks");
   }
   return response.json();
 };
@@ -38,4 +38,28 @@ const createTask = async (payload: TaskRequest): Promise<Task> => {
   }
   return response.json();
 };
-export { getTasks, getTask, getStatuses, createTask };
+const updateTask = async (id: number, payload: TaskRequest): Promise<Task> => {
+  const response = await fetch(`${BASE_URL}/tasks/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "could not update task");
+  }
+  return response.json();
+};
+
+const deleteTask = async (id: number): Promise<void> => {
+  const response = await fetch(`${BASE_URL}/tasks/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "could not delete task");
+  }
+};
+export { getTasks, getTask, getStatuses, createTask, updateTask, deleteTask };

@@ -73,3 +73,23 @@
 .back span{
   cursor: pointer;
 }
+.badges button, .badges a{
+  text-decoration: none;
+  outline: none;
+  color: white;
+  padding:6px 10px;
+  width:80px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  height:30px;
+  text-align: center;
+  font-size:16px;
+}
+.badges button{
+  background: red;
+}
+.badges a{
+  background:gray;
+  padding: 0;
+}

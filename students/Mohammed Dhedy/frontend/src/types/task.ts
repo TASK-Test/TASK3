@@ -12,7 +12,7 @@ export interface Task {
   description: string | null;
   status: Status;
   priority: Priority;
-  targetDate: string | null;
+  targetDate: string ;
   createdById: number;
   createdAt: string;
   updatedAt: string | null;

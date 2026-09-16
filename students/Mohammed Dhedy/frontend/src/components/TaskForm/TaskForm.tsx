@@ -1,13 +1,13 @@
 import styles from "./TaskForm.module.css";
 
 import { useEffect, useState } from "react";
-import type { Priority, Status, TaskRequest } from "../../types/task";
+import type { Priority, Status, Task, TaskRequest } from "../../types/task";
 import SelectField from "../InputFields/SelectField";
 import TextField from "../InputFields/TextField";
-import { createTask, getStatuses } from "../../api/client";
+import { createTask, getStatuses, getTask, updateTask } from "../../api/client";
 import ActionButton from "../ActionButton/ActionButton";
 import QuickMessage from "../QuickMessaage/QuickMessage";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 type fieldsType = {
   title: string;
   description: string;
@@ -17,6 +17,8 @@ type fieldsType = {
 };
 const TaskForm = () => {
   const navigate = useNavigate();
+  const { taskId } = useParams();
+  const isEdit: boolean = taskId !== undefined;
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [error, setError] = useState<string>("");
   const [submitError, setSubmitError] = useState<string>("");
@@ -36,6 +38,17 @@ const TaskForm = () => {
   useEffect(() => {
     const getRes = async () => {
       try {
+        if (isEdit) {
+          console.log(isEdit, taskId);
+          const taskRes: Task = await getTask(Number(taskId));
+          setFormFields({
+            title: taskRes.title,
+            description: taskRes.description || "",
+            priority: taskRes.priority,
+            targetDate: taskRes.targetDate,
+            statusId: taskRes.status.id,
+          });
+        }
         const response: Status[] = await getStatuses();
         const firstStatus = response[0];
         if (!firstStatus) {
@@ -44,19 +57,46 @@ const TaskForm = () => {
           );
         }
         setStatuses(response);
-        setFormFields((prev) => ({ ...prev, statusId: firstStatus.id }));
+        if (!isEdit)
+          setFormFields((prev) => ({ ...prev, statusId: firstStatus.id }));
       } catch (error) {
         setError(
-          error instanceof Error ? error.message : "could not fetch statuses!",
+          error instanceof Error
+            ? error.message
+            : isEdit
+              ? "could not fetch task!"
+              : "could not fetch statuses!",
         );
       } finally {
         setLoading(false);
       }
     };
     getRes();
-  }, []);
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  }, [isEdit, taskId]);
+
+  const validateDate = (targetDate: string): string => {
+    if (targetDate === "") {
+      return "target date cant be empty !";
+    } else {
+      const date = new Date(targetDate);
+      if (Number.isNaN(date.getTime())) {
+        return "Enter a valid date";
+      }
+    }
+    return "";
+  };
+
+  const validateFields = (payload: TaskRequest) => {
     const errors = { title: "", targetDate: "" };
+    if (payload.title === "") {
+      errors.title = "title cant be empty !";
+    }
+    errors.targetDate = validateDate(payload.targetDate);
+    setValidateError(errors);
+    return errors;
+  };
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitError("");
     const payload: TaskRequest = {
@@ -65,28 +105,20 @@ const TaskForm = () => {
       title: formFields.title.trim(),
       description: formFields.description.trim(),
     };
-    if (payload.title.trim() === "") {
-      errors.title = "title cant be empty !";
-    }
-    if (payload.targetDate.trim() === "") {
-      errors.targetDate = "target date cant be empty !";
-    } else {
-      const date = new Date(payload.targetDate);
-      if (
-        Number.isNaN(date.getTime()) ||
-        date.toISOString().slice(0, 10) !== payload.targetDate
-      ) {
-        errors.targetDate = "Enter a valid date";
-      }
-    }
-    setValidateError(errors);
+    const errors = validateFields(payload);
+
     if (errors.title.length > 0 || errors.targetDate.length > 0) {
       return;
     }
     try {
-      const response = await createTask(payload);
-      console.log(response);
+      let response: Task;
+      if (isEdit) {
+        response = await updateTask(Number(taskId), payload);
+      } else {
+        response = await createTask(payload);
+      }
       navigate("/tasks");
+      console.log(response);
     } catch (error) {
       setSubmitError(
         error instanceof Error ? error.message : "something went wrong !",
@@ -101,16 +133,18 @@ const TaskForm = () => {
         <QuickMessage message={error} />
       ) : (
         <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
-          <h2>Create New Task</h2>
+          <h2>{isEdit ? `Update Task #${taskId}` : "Create New Task"}</h2>
           <p style={{ color: "red" }}>{submitError}</p>
           <TextField
             label="Title"
             type="text"
             placeHolder="enter task title"
             fieldValue={formFields.title}
-            setFieldValue={(value: string) =>
-              setFormFields((prev) => ({ ...prev, title: value }))
-            }
+            setFieldValue={(value: string) => {
+              setFormFields((prev) => ({ ...prev, title: value }));
+              if (value.trim() !== "")
+                setValidateError((prev) => ({ ...prev, title: "" }));
+            }}
           />
           <p style={{ color: "red" }}>{validateError.title}</p>
           <TextField
@@ -127,9 +161,11 @@ const TaskForm = () => {
             type="date"
             placeHolder="enter task target data"
             fieldValue={formFields.targetDate}
-            setFieldValue={(value: string) =>
-              setFormFields((prev) => ({ ...prev, targetDate: value }))
-            }
+            setFieldValue={(value: string) => {
+              setFormFields((prev) => ({ ...prev, targetDate: value }));
+              if (validateDate(value) === "")
+                setValidateError((prev) => ({ ...prev, targetDate: "" }));
+            }}
           />
           <p style={{ color: "red" }}>{validateError.targetDate}</p>
           <SelectField
@@ -151,7 +187,7 @@ const TaskForm = () => {
             }
             optionsList={["LOW", "MEDIUM", "HIGH"] as Priority[]}
           />
-          <ActionButton title="Submit" />
+          <ActionButton title={isEdit ? "Update" : "Submit"} />
         </form>
       )}
     </>
