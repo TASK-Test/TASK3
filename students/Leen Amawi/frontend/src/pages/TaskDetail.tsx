@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { getTask } from '../api/client'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import {  deleteTask, getTask } from '../api/client'
 import type { Task } from '../types/task'
 import './TaskDetail.css'
 
@@ -11,6 +11,7 @@ const statuses = {
 }
 
 function TaskDetail() {
+  const navigate = useNavigate()
   const { id } = useParams()
   const [task, setTask] = useState<Task | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,6 +38,22 @@ function TaskDetail() {
   if (!task) {
     return <p>Task not found.</p>
   }
+  const handleDelete = async () => {
+  const confirmed = window.confirm(
+    'Are you sure you want to delete this task?'
+  )
+
+  if (!confirmed) {
+    return
+  }
+
+  try {
+    await deleteTask(Number(id))
+    navigate('/tasks')
+  } catch (error) {
+    setError('Failed to delete task.')
+  }
+}
 
   return (
     <div className="task-detail">
@@ -48,8 +65,10 @@ function TaskDetail() {
       <p> <strong>Status:</strong>{' '}  {statuses[task.statusId as 1 | 2 | 3] ?? 'Unknown'} </p>
       <p> <strong>Target date:</strong> {task.targetDate}</p>
       <p><strong>Created at:</strong> {task.createdAt} </p>
-    </div>
+      <div className="task-actions"><Link  className="task-link" to={`/tasks/${task.id}/edit`}>Edit</Link></div>
+      <button onClick={handleDelete}>Delete</button>
+      </div>
   )
-}
 
+}
 export default TaskDetail

@@ -12,6 +12,7 @@ function App() {
         <Route path="/" element={<Navigate to="/tasks" replace />}/>
         <Route path="/tasks" element={<TaskListPage />}/>
         <Route path="/tasks/create" element={<CreateTaskPage />}/>
+        <Route path="/tasks/:id/edit" element={<CreateTaskPage />}/>
         <Route path="/tasks/:id" element={<TaskDetail />}/>
         <Route path="*" element={<NotFound />}/>
       </Route>
