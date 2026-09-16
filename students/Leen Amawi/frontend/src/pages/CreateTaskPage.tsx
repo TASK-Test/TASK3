@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect,useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createTask, getTask, updateTask } from '../api/client'
+import useAsync from '../hooks/useAsync'
+import Spinner from '../components/Spinner'
+import ErrorBanner from '../components/ErrorBanner'
+import PageHeader from '../components/PageHeader'
+import Button from '../components/Button'
 import './CreateTaskPage.css'
 
 function CreateTaskPage() {
@@ -17,19 +22,16 @@ function CreateTaskPage() {
 
   const [apiError, setApiError] = useState<string | null>(null)
     const isEdit = Boolean(id)
-    useEffect(() => {
-    if (!id) return
-
-    getTask(Number(id)).then((task) => {
-        setTitle(task.title)
-        setDescription(task.description)
-        setStatusId(String(task.statusId))
-        setPriority(task.priority)
-        setTargetDate(task.targetDate)
-      }).catch(() => {
-        setApiError('Failed to load task.')
-      })}, [id])
-
+    const fetchTask = useCallback(() => getTask(Number(id)),[id])
+    const { data: task, loading, error } = useAsync(id ? fetchTask : null)
+useEffect(() => {
+  if (!task) return
+  setTitle(task.title)
+  setDescription(task.description)
+  setStatusId(String(task.statusId))
+  setPriority(task.priority)
+  setTargetDate(task.targetDate)
+}, [task])
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -70,14 +72,21 @@ function CreateTaskPage() {
         await createTask(payload)
       }
       navigate('/tasks')
-    } catch (error) {
+    } catch {
      setApiError(
         isEdit ? 'Failed to update task. Please try again.' : 'Failed to create task. Please try again.')
     }
   }
+  if (loading) {
+  return <Spinner />
+}
+
+if (error) {
+  return <ErrorBanner message={error} />
+}
   return (
     <div className="create-task-page">
-      <h1>{isEdit ? 'Edit Task' : 'Create Task'}</h1>
+      <PageHeader title={isEdit ? 'Edit Task' : 'Create Task'}/>
       <form onSubmit={handleSubmit}>
         {apiError && <div>{apiError}</div>}
         <div>
@@ -113,7 +122,7 @@ function CreateTaskPage() {
           <input type="date" value={targetDate} onChange={(e) => setTargetDate(e.target.value)}/>
         {errors.targetDate && <p>{errors.targetDate}</p>}
         </div>
-        <button type="submit">{isEdit ? 'Save Changes' : 'Create Task'}</button>
+        <Button type="submit">{isEdit ? 'Save Changes' : 'Create Task'}</Button>
       </form>
     </div>
   )
