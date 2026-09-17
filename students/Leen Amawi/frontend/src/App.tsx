@@ -4,6 +4,7 @@ import TaskListPage from './pages/TaskListPage'
 import TaskDetail from './pages/TaskDetail'
 import NotFound from './pages/NotFound'
 import CreateTaskPage from './pages/CreateTaskPage'
+import './components/SharedUI.css'
 
 function App() {
   return (

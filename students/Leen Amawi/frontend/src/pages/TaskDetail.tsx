@@ -1,8 +1,15 @@
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {  deleteTask, getTask } from '../api/client'
 import type { Task } from '../types/task'
+import useAsync from '../hooks/useAsync'
+import Spinner from '../components/Spinner'
+import ErrorBanner from '../components/ErrorBanner'
+import EmptyState from '../components/EmptyState'
+import PageHeader from '../components/PageHeader'
+
 import './TaskDetail.css'
+import Button from '../components/Button'
 
 const statuses = {
   1: 'Backlog',
@@ -13,52 +20,39 @@ const statuses = {
 function TaskDetail() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [task, setTask] = useState<Task | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!id) {
-      setError('Task not found.')
-      setLoading(false)
-      return
-    }
-
-    getTask(Number(id)) .then(setTask) .catch((error) => setError(error.message)).finally(() => setLoading(false))
-  }, [id])
-
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+const { data: task, loading, error } = useAsync<Task>( () => getTask(Number(id)))
+if (!id) {
+  return <p>Task not found.</p>
+}
   if (loading) {
-    return <p>Loading...</p>
-  }
+  return <Spinner />
+}
 
   if (error) {
-    return <p>{error}</p>
+   return <ErrorBanner message={error} />
   }
 
-  if (!task) {
-    return <p>Task not found.</p>
-  }
+if (!task) {
+  return <EmptyState />
+}
   const handleDelete = async () => {
-  const confirmed = window.confirm(
-    'Are you sure you want to delete this task?'
-  )
-
+  const confirmed = window.confirm('Are you sure you want to delete this task?')
   if (!confirmed) {
     return
   }
-
   try {
     await deleteTask(Number(id))
     navigate('/tasks')
-  } catch (error) {
-    setError('Failed to delete task.')
+  } catch  {
+    setDeleteError('Failed to delete task.')
   }
 }
 
   return (
     <div className="task-detail">
       <Link to="/tasks" className="back-link"> Back to tasks </Link>
-      <h1>{task.title}</h1>
+      <PageHeader title={task.title} />
       <p> <strong>ID:</strong> {task.id}</p>
       <p> <strong>Description:</strong> {task.description} </p>
       <p>  <strong>Priority:</strong> {task.priority} </p>
@@ -66,7 +60,8 @@ function TaskDetail() {
       <p> <strong>Target date:</strong> {task.targetDate}</p>
       <p><strong>Created at:</strong> {task.createdAt} </p>
       <div className="task-actions"><Link  className="task-link" to={`/tasks/${task.id}/edit`}>Edit</Link></div>
-      <button onClick={handleDelete}>Delete</button>
+      {deleteError && <p>{deleteError}</p>}
+      <Button onClick={handleDelete}>Delete</Button>
       </div>
   )
 

@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Header from '../components/Header'
 import TaskList from '../components/TaskList'
 import FilterBar from '../components/Filter'
 import { getTasks } from '../api/client'
 import type { Task } from '../types/task'
+import useAsync from '../hooks/useAsync'
+import Spinner from '../components/Spinner'
+import ErrorBanner from '../components/ErrorBanner'
+import EmptyState from '../components/EmptyState'
+import PageHeader from '../components/PageHeader'
 import '../App.css'
 
 const statusNames: Record<number, string> = {
@@ -13,20 +18,13 @@ const statusNames: Record<number, string> = {
 }
 
 function TaskListPage() {
-  const [tasks, setTasks] = useState<Task[]>([])
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const [sortByDate, setSortByDate] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+const { data: tasks, loading, error } = useAsync<Task[]>(getTasks)
 
-  useEffect(() => {
-    getTasks() .then(setTasks).catch((error) => setError(error.message)).finally(() => setLoading(false))
-  }, [])
-
-  const filteredTasks = tasks
-    .filter((task) => {
-      const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase())
+  const filteredTasks = (tasks ?? []).filter((task) => {
+  const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase())
 
       const matchesStatus = statusFilter === 'ALL' ||statusNames[task.statusId] === statusFilter
       return matchesSearch && matchesStatus
@@ -39,13 +37,11 @@ function TaskListPage() {
   return (
     <div>
       <Header />
+      <PageHeader title="Tasks" />
       <FilterBar search={search} setSearch={setSearch} statusFilter={statusFilter} setStatusFilter={setStatusFilter} sortByDate={sortByDate} setSortByDate={setSortByDate}/>
-      {loading && <p>Loading tasks...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && (filteredTasks.length > 0 ? ( <TaskList tasks={filteredTasks} />) : (
-          <p>No tasks found.</p>
-        ))}
+      {loading && <Spinner />}
+      {error && <ErrorBanner message={error} />}
+      {!loading && !error && (filteredTasks.length > 0 ? ( <TaskList tasks={filteredTasks} />):(<EmptyState />))}
     </div>
   )}
-
 export default TaskListPage
