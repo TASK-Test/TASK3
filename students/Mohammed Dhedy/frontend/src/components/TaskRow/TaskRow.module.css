@@ -1,14 +1,34 @@
-.table_row{
-    width: 100%;
+.table_row {
+  width: 100%;
 }
-.table_row:hover .row_cell{
-    background: var(--accent-bg);
+.table_row:hover .row_cell {
+  background: var(--accent-bg);
 }
-.row_cell{
-    padding: 10px;
-    background: rgb(66, 65, 65);
-    border: solid 1px rgb(205, 203, 203);
-    text-align: center;
-    transition:200ms;
-    border:solid 1px var(--accent-border);
+.row_cell {
+  padding: 10px;
+  background: rgb(66, 65, 65);
+  border: solid 1px rgb(205, 203, 203);
+  text-align: center;
+  transition: 200ms;
+  border: solid 1px var(--accent-border);
+}
+.row_cell.overdue{
+    border-color: red;
+}
+.overdue {
+  color: rgb(244, 60, 60);
+  position: relative;
+}
+.overdue::before {
+  content: "overdue";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: fit-content;
+  padding: 1px 4px;
+  line-height: 1;
+  font-size: 11px;
+  color: white;
+  background: red;
+  white-space: nowrap;
 }

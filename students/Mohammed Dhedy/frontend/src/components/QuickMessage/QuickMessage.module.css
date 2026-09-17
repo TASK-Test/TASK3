@@ -1,0 +1,18 @@
+.warning{
+    text-align: center;
+    text-transform: capitalize;
+    padding:5px;
+    color:white;
+}
+.error{
+    background:rgb(167, 3, 3);
+}
+.empty{
+    background:rgba(0, 64, 255, 0.652);
+}
+.notFound{
+    background:rgba(255, 174, 0, 0.786);
+}
+.loading{
+    background:rgba(209, 51, 236, 0.826);
+}

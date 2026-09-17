@@ -3,11 +3,11 @@ import styles from "./TaskList.module.css";
 import { useEffect, useState } from "react";
 
 import type { Task } from "../../types/task";
-import TaskRow from "../TaskRow/TaskRow";
-import FilterBar from "../FilterBar/FilterBar";
+import TaskRow from "../../components/TaskRow/TaskRow";
+import FilterBar from "../../components/FilterBar/FilterBar";
 import { getTasks } from "../../api/client";
-import ActionButton from "../ActionButton/ActionButton";
-import QuickMessage from "../QuickMessaage/QuickMessage";
+import ActionButton from "../../components/ActionButton/ActionButton";
+import QuickMessage from "../../components/QuickMessage/QuickMessage";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -75,11 +75,11 @@ const TaskList = () => {
         setTargetDateFilter={setTargetDateFilter}
       />
       {loading ? (
-        <QuickMessage message="loading ..."/>
+        <QuickMessage type="loading" message="loading your tasks" />
       ) : error ? (
-        <QuickMessage message={error}/>
+        <QuickMessage type="error" message={error} />
       ) : results.length < 1 ? (
-        <QuickMessage message="there is no tasks"/>
+        <QuickMessage type="empty" message="there is no tasks" />
       ) : (
         <table>
           <thead>
