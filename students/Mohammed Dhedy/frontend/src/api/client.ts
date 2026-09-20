@@ -1,4 +1,4 @@
-const BASE_URL: string = "/api";
+const BASE_URL: string = import.meta.env.VITE_API_URL;
 import type { Status, Task, TaskRequest } from "../types/task";
 
 const getTasks = async (): Promise<Task[]> => {
