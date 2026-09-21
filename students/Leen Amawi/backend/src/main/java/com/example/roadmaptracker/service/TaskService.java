@@ -4,10 +4,15 @@ import com.example.roadmaptracker.dto.TaskResponse;
 import com.example.roadmaptracker.repository.StatusRepository;
 import com.example.roadmaptracker.repository.TaskRepository;
 import com.example.roadmaptracker.repository.UserRepository;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import com.example.roadmaptracker.entity.Task;
 import com.example.roadmaptracker.mapper.TaskMapper;
+
 @Service
 public class TaskService {
 
@@ -22,8 +27,8 @@ public class TaskService {
     }
 
     public TaskResponse create(TaskRequest request) {
-    var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new RuntimeException("Status not found"));
-    var user = userRepository.findById(1L).orElseThrow(() -> new RuntimeException("User not found"));
+    var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Status not found"));
+    var user = userRepository.findById(1L).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
     Task task = new Task();
     task.setTitle(request.title());
     task.setDescription(request.description());
@@ -40,13 +45,13 @@ public class TaskService {
     }
 
     public TaskResponse get(Long id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        Task task = taskRepository.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Task not found"));
     return TaskMapper.toResponse(task);
     }
 
     public TaskResponse update(Long id, TaskRequest request) {
-    Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
-    var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new RuntimeException("Status not found"));
+    Task task = taskRepository.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "Task not found"));
+    var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
     task.setTitle(request.title());
     task.setDescription(request.description());
     task.setStatus(status);
@@ -57,7 +62,7 @@ public class TaskService {
     }
 
     public void delete(Long id) {
-         Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+         Task task = taskRepository.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     taskRepository.delete(task);
     }
 }

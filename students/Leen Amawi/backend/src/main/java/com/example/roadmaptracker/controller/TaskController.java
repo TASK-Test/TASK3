@@ -1,5 +1,5 @@
 package com.example.roadmaptracker.controller;
-
+import jakarta.validation.Valid;
 import com.example.roadmaptracker.dto.TaskRequest;
 import com.example.roadmaptracker.dto.TaskResponse;
 import com.example.roadmaptracker.service.TaskService;
@@ -21,19 +21,19 @@ public class TaskController {
     public ResponseEntity<List<TaskResponse>> list() {
         return ResponseEntity.ok(taskService.list());
     }
-    @PostMapping
-    public ResponseEntity<TaskResponse> create(@RequestBody TaskRequest request) {
-        TaskResponse created = taskService.create(request);
-        URI location = URI.create("/api/tasks/" + created.id());
-        return ResponseEntity.created(location).body(created);
-    }
+   @PostMapping
+    public ResponseEntity<TaskResponse> create(@Valid @RequestBody TaskRequest request) {
+    TaskResponse created = taskService.create(request);
+    URI location = URI.create("/api/tasks/" + created.id());
+    return ResponseEntity.created(location).body(created);
+     }
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> get(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.get(id));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<TaskResponse> update(@PathVariable Long id, @RequestBody TaskRequest request) {
-        return ResponseEntity.ok(taskService.update(id, request));
+     public ResponseEntity<TaskResponse> update(@PathVariable Long id,@Valid @RequestBody TaskRequest request) {
+    return ResponseEntity.ok(taskService.update(id, request));  
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

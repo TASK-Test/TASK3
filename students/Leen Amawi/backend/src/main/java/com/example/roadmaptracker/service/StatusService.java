@@ -7,14 +7,17 @@ import com.example.roadmaptracker.repository.StatusRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import com.example.roadmaptracker.repository.TaskRepository;
 import java.util.List;
 
 @Service
 public class StatusService {
     private final StatusRepository statusRepository;
-    public StatusService(StatusRepository statusRepository) {
-        this.statusRepository = statusRepository;
-    }
+    private final TaskRepository taskRepository;
+   public StatusService(StatusRepository statusRepository,TaskRepository taskRepository) {
+    this.statusRepository = statusRepository;
+    this.taskRepository = taskRepository;
+}
 
     public List<StatusResponse> list() {
         return statusRepository.findAllByOrderByPositionAsc().stream().map(StatusMapper::toResponse).toList();
@@ -43,6 +46,9 @@ public class StatusService {
     }
     public void delete(Long id) {
         Status status = statusRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
+         if (taskRepository.existsByStatusId(id)) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT,"Status is still in use");
+    }
         statusRepository.delete(status);
     }
 }
