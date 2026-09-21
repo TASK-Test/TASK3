@@ -4,8 +4,13 @@ import { ApiError, type ApiErrorBody } from "./ApiError";
 
 const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
-    const errorBody: ApiErrorBody = await response.json();
-    if (errorBody.status == 400 && errorBody.fieldErrors)
+    let errorBody: ApiErrorBody;
+    try {
+      errorBody = await response.json();
+    } catch {
+      throw new ApiError(response.status, "Could not connect to the server");
+    }
+    if (errorBody.status === 400 && errorBody.fieldErrors)
       throw new ApiError(
         errorBody.status,
         errorBody.message,
@@ -13,8 +18,8 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
       );
     throw new ApiError(errorBody.status, errorBody.message);
   }
-  if(response.status===204)
-    return undefined as T;
+  if (response.status === 204) return undefined as T;
+
   return response.json();
 };
 

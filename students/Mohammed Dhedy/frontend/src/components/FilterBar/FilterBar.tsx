@@ -3,6 +3,7 @@ import styles from "./FilterBar.module.css";
 import type { Status } from "../../types/task";
 import { getStatuses } from "../../api/client";
 import QuickMessage from "../QuickMessage/QuickMessage";
+
 type filterBarProps = {
   search: string;
   statusFilter: string;
@@ -21,7 +22,9 @@ const FilterBar = (props: filterBarProps) => {
         setStatuses(response);
         if (response.length <= 0) throw new Error("There is no statuses !");
       } catch (error) {
-        setError(error instanceof Error ? error.message : "");
+        if (error instanceof Error) {
+          setError(error.message);
+        }
       }
     };
     getRes();
