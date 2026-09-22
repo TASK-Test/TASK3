@@ -26,7 +26,9 @@ const TaskList = () => {
         if (!ignore) setTasks(res);
       } catch (error) {
         if (!ignore)
-          setError(error instanceof Error ? error.message : "unexpected error");
+          if (error instanceof Error) {
+            setError(error.message);
+          }
       } finally {
         if (!ignore) setLoading(false);
       }

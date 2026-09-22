@@ -8,6 +8,7 @@ import { createTask, getStatuses, getTask, updateTask } from "../../api/client";
 import ActionButton from "../../components/ActionButton/ActionButton";
 import QuickMessage from "../../components/QuickMessage/QuickMessage";
 import { useNavigate, useParams } from "react-router-dom";
+import { ApiError } from "../../api/ApiError";
 type fieldsType = {
   title: string;
   description: string;
@@ -59,13 +60,13 @@ const TaskForm = () => {
         if (!isEdit)
           setFormFields((prev) => ({ ...prev, statusId: firstStatus.id }));
       } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : isEdit
-              ? "could not fetch task!"
-              : "could not fetch statuses!",
-        );
+        if (error instanceof Error) {
+          setError(error.message);
+        } else if (isEdit) {
+          setError("could not fetch task!");
+        } else {
+          setError("could not fetch statuses!");
+        }
       } finally {
         setLoading(false);
       }
@@ -119,6 +120,13 @@ const TaskForm = () => {
       navigate("/tasks");
       console.log(response);
     } catch (error) {
+      if (error instanceof ApiError && error.fieldErrors) {
+        setValidateError({
+          title: error.fieldErrors.title ?? "",
+          targetDate: error.fieldErrors.targetDate ?? "",
+        });
+        return;
+      }
       setSubmitError(
         error instanceof Error ? error.message : "something went wrong !",
       );

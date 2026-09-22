@@ -1,6 +1,7 @@
 package com.example.tasktracker.service;
 import java.util.List;
 import com.example.tasktracker.repository.StatusRepository;
+import com.example.tasktracker.repository.TaskRepository;
 import com.example.tasktracker.entity.Status;
 import org.springframework.stereotype.Service;
 import com.example.tasktracker.dto.statusdtos.StatusMapper;
@@ -11,8 +12,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class StatusService{
 private final StatusRepository repository;
-    public StatusService(StatusRepository repository){
+private final TaskRepository taskRepository;
+    public StatusService(StatusRepository repository,TaskRepository taskRepository){
         this.repository=repository;
+        this.taskRepository=taskRepository;
     }
     public List<StatusResponse> list(){
         return repository.findAllByOrderByPositionAsc()
@@ -45,6 +48,9 @@ private final StatusRepository repository;
     public void delete(Long id){
         if(!repository.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"status not found");
+        }
+        if(taskRepository.existsByStatus_Id(id)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"cant delete a status that is already in use");
         }
         repository.deleteById(id);
     }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.tasktracker.dto.taskdtos.*;
 import com.example.tasktracker.service.TaskService;
 
+import jakarta.validation.Valid;
+
 import java.net.URI;
 import java.util.List;
 
@@ -39,14 +41,14 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponse> create(@RequestBody TaskRequest request){
+    public ResponseEntity<TaskResponse> create(@Valid @RequestBody TaskRequest request){
         TaskResponse response=service.create(request);
         URI location=URI.create("/api/tasks/"+response.id());
         return ResponseEntity.created(location).body(response);
     }
 
     @PutMapping("/{id}")
-    public TaskResponse update(@RequestBody TaskRequest request,@PathVariable Long id){
+    public TaskResponse update(@Valid @RequestBody TaskRequest request,@PathVariable Long id){
         return service.update(request, id);
     }
 

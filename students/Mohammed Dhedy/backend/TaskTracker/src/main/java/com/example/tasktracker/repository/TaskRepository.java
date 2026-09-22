@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.tasktracker.entity.Task;
 
 
-public interface TaskRepository extends JpaRepository<Task, Long>{}
+public interface TaskRepository extends JpaRepository<Task, Long>{
+    boolean existsByStatus_Id(Long statusId);
+}

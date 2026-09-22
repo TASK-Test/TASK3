@@ -1,28 +1,39 @@
 const BASE_URL: string = import.meta.env.VITE_API_URL;
 import type { Status, Task, TaskRequest } from "../types/task";
+import { ApiError, type ApiErrorBody } from "./ApiError";
+
+const handleResponse = async <T>(response: Response): Promise<T> => {
+  if (!response.ok) {
+    let errorBody: ApiErrorBody;
+    try {
+      errorBody = await response.json();
+    } catch {
+      throw new ApiError(response.status, "Could not connect to the server");
+    }
+    if (errorBody.status === 400 && errorBody.fieldErrors)
+      throw new ApiError(
+        errorBody.status,
+        errorBody.message,
+        errorBody.fieldErrors,
+      );
+    throw new ApiError(errorBody.status, errorBody.message);
+  }
+  if (response.status === 204) return undefined as T;
+
+  return response.json();
+};
 
 const getTasks = async (): Promise<Task[]> => {
   const response = await fetch(`${BASE_URL}/tasks`);
-  if (!response.ok) {
-    throw new Error("could not fetch tasks");
-  }
-  return response.json();
+  return handleResponse(response);
 };
 const getTask = async (id: number): Promise<Task> => {
   const response = await fetch(`${BASE_URL}/tasks/${id}`);
-  if (response.status === 404) {
-    throw new Error("Task is not found");
-  } else if (!response.ok) {
-    throw new Error("something went wrong :(");
-  }
-  return response.json();
+  return handleResponse(response);
 };
 const getStatuses = async (): Promise<Status[]> => {
   const response = await fetch(`${BASE_URL}/statuses`);
-  if (!response.ok) {
-    throw new Error("could not bring statuses");
-  }
-  return response.json();
+  return handleResponse(response);
 };
 const createTask = async (payload: TaskRequest): Promise<Task> => {
   const response = await fetch(`${BASE_URL}/tasks`, {
@@ -32,11 +43,7 @@ const createTask = async (payload: TaskRequest): Promise<Task> => {
     },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "something wrong!");
-  }
-  return response.json();
+  return handleResponse(response);
 };
 const updateTask = async (id: number, payload: TaskRequest): Promise<Task> => {
   const response = await fetch(`${BASE_URL}/tasks/${id}`, {
@@ -46,20 +53,13 @@ const updateTask = async (id: number, payload: TaskRequest): Promise<Task> => {
     },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "could not update task");
-  }
-  return response.json();
+  return handleResponse(response);
 };
 
 const deleteTask = async (id: number): Promise<void> => {
   const response = await fetch(`${BASE_URL}/tasks/${id}`, {
     method: "DELETE",
   });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "could not delete task");
-  }
+  return handleResponse(response);
 };
 export { getTasks, getTask, getStatuses, createTask, updateTask, deleteTask };
