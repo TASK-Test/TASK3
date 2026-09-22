@@ -1,24 +1,49 @@
 import type { Task } from "../types/task";
 const API = import.meta.env.VITE_API_URL;
 
-export async function getTasks(): Promise<Task[]> {
-  const response = await fetch(`${API}/tasks`);
+export type ApiFieldErrors = Record<string, string>;
+export class ApiError extends Error {
+  status: number;
+  fieldErrors: ApiFieldErrors;
 
+  constructor(status: number,message: string,fieldErrors: ApiFieldErrors = {}) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.fieldErrors = fieldErrors;
+  }
+}
+async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    throw new Error("Failed to fetch tasks");
+    let body: {
+      message?: string
+      fieldErrors?: ApiFieldErrors
+    } = {}
+
+    try {
+      body = await response.json()
+    } catch {
+    }
+    throw new ApiError( response.status,body.message ?? `Request failed with status ${response.status}`,body.fieldErrors ?? {})
   }
 
-  return response.json();
+  if (response.status === 204) {
+    return undefined as T
+  }
+
+  return response.json()
+}
+
+export async function getTasks(): Promise<Task[]> {
+  const response = await fetch(`${API}/tasks`);
+ return handleResponse<Task[]>(response);
 }
 
 export async function getTask(id: number): Promise<Task> {
   const response = await fetch(`${API}/tasks/${id}`);
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch task");
-  }
 
-  return response.json();
+  return handleResponse<Task>(response);
 }
 
 
@@ -35,10 +60,8 @@ export async function createTask(payload: CreateTaskPayload): Promise<Task> {
     headers: {'Content-Type': 'application/json',},
     body: JSON.stringify(payload),
   })
-  if (!response.ok) {
-    throw new Error('Failed to create task')
-  }
-  return response.json()
+
+  return handleResponse<Task>(response)
 }
 export async function updateTask(id: number, payload: CreateTaskPayload): Promise<Task> {
   const response = await fetch(`${API}/tasks/${id}`, {
@@ -46,18 +69,12 @@ export async function updateTask(id: number, payload: CreateTaskPayload): Promis
     headers: {'Content-Type': 'application/json',},
     body: JSON.stringify(payload),
   })
-  if (!response.ok) {
-    throw new Error('Failed to update task')
-  }
 
-  return response.json()
+  return handleResponse<Task>(response)
 }
 export async function deleteTask(id: number): Promise<void> {
   const response = await fetch(`${API}/tasks/${id}`, {
     method: 'DELETE',
   })
-
-  if (!response.ok) {
-    throw new Error('Failed to delete task')
-  }
+  return handleResponse<void>(response)
 }

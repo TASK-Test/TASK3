@@ -21,7 +21,10 @@ function TaskDetail() {
   const navigate = useNavigate()
   const { id } = useParams()
   const [deleteError, setDeleteError] = useState<string | null>(null)
-const { data: task, loading, error } = useAsync<Task>( () => getTask(Number(id)))
+const { data: task, loading, error } = useAsync<Task>(() => getTask(Number(id)))
+
+console.log('TASK:', task)
+console.log('ERROR:', error)
 if (!id) {
   return <p>Task not found.</p>
 }

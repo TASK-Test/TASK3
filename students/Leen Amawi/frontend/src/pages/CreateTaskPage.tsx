@@ -1,6 +1,6 @@
 import { useCallback, useEffect,useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { createTask, getTask, updateTask } from '../api/client'
+import { ApiError, createTask, getTask, updateTask } from '../api/client'
 import useAsync from '../hooks/useAsync'
 import Spinner from '../components/Spinner'
 import ErrorBanner from '../components/ErrorBanner'
@@ -72,10 +72,23 @@ useEffect(() => {
         await createTask(payload)
       }
       navigate('/tasks')
-    } catch {
-     setApiError(
-        isEdit ? 'Failed to update task. Please try again.' : 'Failed to create task. Please try again.')
+    } catch (error) {
+  if (error instanceof ApiError) {
+    setErrors(error.fieldErrors)
+    if (Object.keys(error.fieldErrors).length === 0) {
+      setApiError(error.message)
+    } else {
+      setApiError(null)
     }
+    return
+  }
+
+  setApiError(
+    isEdit
+      ? 'Failed to update task. Please try again.'
+      : 'Failed to create task. Please try again.'
+  )
+}
   }
   if (loading) {
   return <Spinner />
