@@ -18,11 +18,13 @@ public class JwtService {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expiration = expiration;
     }
+
     public String generateToken(String username) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
         return Jwts.builder().subject(username).issuedAt(now).expiration(expiryDate).signWith(secretKey, Jwts.SIG.HS256).compact();
     }
+
     public String validateToken(String token) {
         Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
         return claims.getSubject();
