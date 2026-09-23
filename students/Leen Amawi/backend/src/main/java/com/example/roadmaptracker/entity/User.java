@@ -44,13 +44,13 @@ public class User {
         return id;
     }
 
-    public String getName() {
-        return username;
-    }
+    public String getUsername() {
+    return username;
+}
 
-    public void setName(String name) {
-        this.username = name;
-    }
+public void setUsername(String username) {
+    this.username = username;
+}
 
     public String getEmail() {
         return email;
