@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -41,5 +42,16 @@ public ResponseEntity<ErrorResponse> handleResponseStatus( ResponseStatusExcepti
                     request.getRequestURI(),
                     Map.of()
             ));
+}
+@ExceptionHandler(BadCredentialsException.class)
+public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex,HttpServletRequest request) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(
+            Instant.now(),
+            HttpStatus.UNAUTHORIZED.value(),
+            HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+            "Invalid username or password",
+            request.getRequestURI(),
+            Map.of()
+    ));
 }
 }
