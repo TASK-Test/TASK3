@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.example.tasktracker.dto.taskdtos.*;
 import com.example.tasktracker.entity.User;
@@ -13,20 +14,17 @@ import com.example.tasktracker.entity.Status;
 import com.example.tasktracker.entity.Task;
 import com.example.tasktracker.repository.StatusRepository;
 import com.example.tasktracker.repository.TaskRepository;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.example.tasktracker.repository.UserRepository;
 
 @Service 
 public class TaskService {
     private final TaskRepository repository;
     private  final StatusRepository statusRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public TaskService(TaskRepository repository,StatusRepository statusRepository){
+    private final UserRepository userRepository;
+    public TaskService(TaskRepository repository,StatusRepository statusRepository,UserRepository userRepository){
         this.repository=repository;
         this.statusRepository=statusRepository;
+        this.userRepository=userRepository;
     }
     public List<TaskResponse> list(){
         return repository.findAll()
@@ -35,12 +33,9 @@ public class TaskService {
         .toList();
     }
     public TaskResponse create(TaskRequest request){
-        User user=entityManager.find(User.class, request.createdById());
-        if(user==null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!");
-        }
+        User user=getCurrentUser();
         Status status=statusRepository.findById(request.statusId())
-        .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Sstatus not found"));
+        .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
         Task task=repository.save(TaskMapper.toTask(request, status, user));
         return TaskMapper.toResponse(task);
     }
@@ -51,10 +46,6 @@ public class TaskService {
         return TaskMapper.toResponse(task);
     }
     public TaskResponse update(TaskRequest request,Long id){
-        User user=entityManager.find(User.class, request.createdById());
-        if(user==null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!");
-        }
         Status status=statusRepository.findById(request.statusId())
         .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Sstatus not found"));
         
@@ -65,7 +56,6 @@ public class TaskService {
         task.setStatus(status);
         task.setPriority(request.priority());
         task.setTargetDate(request.targetDate());
-        task.setCreatedBy(user);
         task.setUpdatedAt(Instant.now());
 
         Task updatedTask=repository.save(task);
@@ -76,5 +66,12 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"task not found");
         }
         repository.deleteById(id);
+    }
+
+
+    public User getCurrentUser(){
+        String username=SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username)
+        .orElseThrow(()->new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Authenticated user not found"));
     }
 }

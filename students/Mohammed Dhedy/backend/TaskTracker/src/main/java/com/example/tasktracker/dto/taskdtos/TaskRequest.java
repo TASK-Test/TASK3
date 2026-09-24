@@ -14,6 +14,5 @@ public record TaskRequest(
     Long statusId,
     Priority priority,
     @NotNull(message = "Target date is required")
-    LocalDate targetDate,
-    Long createdById
+    LocalDate targetDate
 ) {}
