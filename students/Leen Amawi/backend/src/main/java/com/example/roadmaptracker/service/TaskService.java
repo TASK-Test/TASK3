@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import com.example.roadmaptracker.entity.Task;
 import com.example.roadmaptracker.mapper.TaskMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class TaskService {
@@ -28,7 +30,10 @@ public class TaskService {
 
     public TaskResponse create(TaskRequest request) {
     var status = statusRepository.findById(request.statusId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Status not found"));
-    var user = userRepository.findById(1L).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found"));
+     Authentication authentication =SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    var user = userRepository.findByUsername(username).orElseThrow(() ->
+    new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authenticated user not found"));
     Task task = new Task();
     task.setTitle(request.title());
     task.setDescription(request.description());
