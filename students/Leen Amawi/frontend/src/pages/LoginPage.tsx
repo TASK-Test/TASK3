@@ -48,6 +48,7 @@ return (
       </div>
 
       <button className="auth-button" type="submit">Login </button>
+       <p className="auth-switch"> Don't have an account?{' '} <button type="button" className="auth-link" onClick={() => navigate('/register')} > Register </button> </p>
     </form>
   </div>
 )
