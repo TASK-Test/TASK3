@@ -4,7 +4,9 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,36 +17,52 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception,HttpServletRequest request){
-        int status=exception.getStatusCode().value();
-        Map<String,String> fieldErrors=new HashMap<>();
-        for(FieldError fieldError:exception.getBindingResult().getFieldErrors()){
-            fieldErrors.putIfAbsent(fieldError.getField(),fieldError.getDefaultMessage());
+    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception, HttpServletRequest request) {
+        int status = exception.getStatusCode().value();
+        Map<String, String> fieldErrors = new HashMap<>();
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+            fieldErrors.putIfAbsent(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        ApiErrorResponse response=new ApiErrorResponse(
-            Instant.now(),
-            status,
-            exception.getBody().getTitle(),
-            exception.getBody().getDetail(),
-            request.getRequestURI(),
-            fieldErrors
-        );
+        ApiErrorResponse response = new ApiErrorResponse(
+                Instant.now(),
+                status,
+                exception.getBody().getTitle(),
+                exception.getBody().getDetail(),
+                request.getRequestURI(),
+                fieldErrors);
         return ResponseEntity.status(status).body(response);
     }
-    
+
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ApiErrorResponse> handleResponseStatusException(ResponseStatusException exception,HttpServletRequest request){
-        int status =exception.getStatusCode().value();
-        ApiErrorResponse response=new ApiErrorResponse(
-            Instant.now(),
-            status,
-            exception.getBody().getTitle(),
-            exception.getBody().getDetail(),
-            request.getRequestURI(),
-            null
-        );
+    public ResponseEntity<ApiErrorResponse> handleResponseStatusException(ResponseStatusException exception,
+            HttpServletRequest request) {
+        int status = exception.getStatusCode().value();
+        ApiErrorResponse response = new ApiErrorResponse(
+                Instant.now(),
+                status,
+                exception.getBody().getTitle(),
+                exception.getBody().getDetail(),
+                request.getRequestURI(),
+                null);
+        return ResponseEntity.status(status).body(response);
+    }
+
+    // login exception
+    // includes BadCredentialsException,UsernameNotFoundException
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(AuthenticationException exception,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ApiErrorResponse response = new ApiErrorResponse(
+                Instant.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                "Invalid username or password",
+                request.getRequestURI(),
+                null);
         return ResponseEntity.status(status).body(response);
     }
 }
