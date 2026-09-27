@@ -1,5 +1,6 @@
 import type { Task } from "../types/task";
 const API = import.meta.env.VITE_API_URL;
+import { getToken, logout } from '../auth/auth'
 
 export type LoginResponse = {
   token: string
@@ -53,6 +54,21 @@ export class ApiError extends Error {
     this.fieldErrors = fieldErrors;
   }
 }
+async function authFetch(url: string,options: RequestInit = {}): Promise<Response> {
+  const token = getToken()
+  const headers = new Headers(options.headers)
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
+  const response = await fetch(url, {...options, headers,})
+  if (response.status === 401 && !url.includes('/auth/')) {
+    logout()
+    window.location.href = '/login'
+  }
+  return response
+}
+
+
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let body: {
@@ -75,14 +91,12 @@ async function handleResponse<T>(response: Response): Promise<T> {
 }
 
 export async function getTasks(): Promise<Task[]> {
-  const response = await fetch(`${API}/tasks`);
+  const response = await authFetch(`${API}/tasks`);
  return handleResponse<Task[]>(response);
 }
 
 export async function getTask(id: number): Promise<Task> {
-  const response = await fetch(`${API}/tasks/${id}`);
-
-
+  const response = await authFetch(`${API}/tasks/${id}`);
   return handleResponse<Task>(response);
 }
 
@@ -95,7 +109,7 @@ export type CreateTaskPayload = {
   targetDate: string
 }
 export async function createTask(payload: CreateTaskPayload): Promise<Task> {
-  const response = await fetch(`${API}/tasks`, {
+  const response = await authFetch(`${API}/tasks`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json',},
     body: JSON.stringify(payload),
@@ -104,7 +118,7 @@ export async function createTask(payload: CreateTaskPayload): Promise<Task> {
   return handleResponse<Task>(response)
 }
 export async function updateTask(id: number, payload: CreateTaskPayload): Promise<Task> {
-  const response = await fetch(`${API}/tasks/${id}`, {
+  const response = await authFetch(`${API}/tasks/${id}`, {
     method: 'PUT',
     headers: {'Content-Type': 'application/json',},
     body: JSON.stringify(payload),
@@ -113,7 +127,7 @@ export async function updateTask(id: number, payload: CreateTaskPayload): Promis
   return handleResponse<Task>(response)
 }
 export async function deleteTask(id: number): Promise<void> {
-  const response = await fetch(`${API}/tasks/${id}`, {
+  const response = await authFetch(`${API}/tasks/${id}`, {
     method: 'DELETE',
   })
   return handleResponse<void>(response)
