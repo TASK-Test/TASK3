@@ -1,6 +1,46 @@
 import type { Task } from "../types/task";
 const API = import.meta.env.VITE_API_URL;
 
+export type LoginResponse = {
+  token: string
+}
+
+export type RegisterPayload = {
+  username: string
+  email: string
+  password: string
+  displayName?: string
+}
+
+export type RegisterResponse = {
+  id: number
+  username: string
+  email: string
+  displayName: string
+  role: string
+}
+
+export async function login(username: string,password: string): Promise<LoginResponse> {
+  const response = await fetch(`${API}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({username,password,}),
+  })
+  return handleResponse<LoginResponse>(response)
+}
+export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
+  const response = await fetch(`${API}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+  return handleResponse<RegisterResponse>(response)
+}
+
 export type ApiFieldErrors = Record<string, string>;
 export class ApiError extends Error {
   status: number;
