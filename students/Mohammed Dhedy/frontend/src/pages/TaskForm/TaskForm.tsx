@@ -101,7 +101,6 @@ const TaskForm = () => {
     setSubmitError("");
     const payload: TaskRequest = {
       ...formFields,
-      createdById: 1,
       title: formFields.title.trim(),
       description: formFields.description.trim(),
     };

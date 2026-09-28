@@ -13,11 +13,13 @@ const TextField = ({
   type,
   label,
 }: FieldsProps) => {
+  const fieldId = `${label}-${type}`.toLowerCase().replace(/\s+/g, "-");
+
   return (
     <div className={styles.fieldParent}>
-      <label htmlFor="field">{label}</label>
+      <label htmlFor={fieldId}>{label}</label>
       <input
-        id="field"
+        id={fieldId}
         className={styles.inputField}
         type={type}
         value={fieldValue}

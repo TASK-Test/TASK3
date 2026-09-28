@@ -12,7 +12,7 @@ export interface Task {
   description: string | null;
   status: Status;
   priority: Priority;
-  targetDate: string ;
+  targetDate: string;
   createdById: number;
   createdAt: string;
   updatedAt: string | null;
@@ -24,7 +24,6 @@ export interface TaskRequest {
   statusId: number;
   priority: Priority;
   targetDate: string;
-  createdById: number;
 }
 
-export type MessagesType="error"|"empty"|"notFound"|"loading";
+export type MessagesType = "error" | "empty" | "notFound" | "loading";
