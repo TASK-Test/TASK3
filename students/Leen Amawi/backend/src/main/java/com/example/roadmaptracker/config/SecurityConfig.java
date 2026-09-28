@@ -8,7 +8,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.example.roadmaptracker.security.JwtAuthFilter;
 import com.example.roadmaptracker.service.JwtService;
-
+import org.springframework.http.HttpMethod;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -22,7 +22,9 @@ this.jwtService = jwtService;}
      JwtAuthFilter jwtAuthFilter = new JwtAuthFilter(jwtService);
         http.csrf(csrf -> csrf.disable()).sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .exceptionHandling(exception ->exception.authenticationEntryPoint((request, response, authException) ->response
-        .sendError(HttpServletResponse.SC_UNAUTHORIZED))).authorizeHttpRequests(auth ->auth.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
+        .sendError(HttpServletResponse.SC_UNAUTHORIZED))).authorizeHttpRequests(auth ->
+        auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        .requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
         .addFilterBefore(jwtAuthFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
